@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>راهنمای استقرار روی GitHub Pages</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --primary: #0f766e;
+  --primary-light: #14b8a6;
+  --accent: #f59e0b;
+  --bg: #0a0f1c;
+  --card: #131a2c;
+  --card-light: #1c2440;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --success: #10b981;
+  --danger: #ef4444;
+  --border: rgba(148, 163, 184, 0.1);
+  --code-bg: #1c2440;
+}
+
+body {
+  font-family: 'Vazirmatn', sans-serif;
+  background: linear-gradient(180deg, #0a0f1c 0%, #131a2c 100%);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 32px 0 40px;
+}
+
+.hero-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
+  background: linear-gradient(135deg, #24292e, #0f766e);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  box-shadow: 0 10px 30px rgba(15, 118, 110, 0.3);
+}
+
+.hero h1 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* Quick info */
+.quick-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.info-pill {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.info-pill .icon { font-size: 24px; margin-bottom: 4px; }
+.info-pill .title { font-size: 13px; font-weight: 600; }
+.info-pill .desc { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* Step card */
+.step-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.step-card::before {
+  content: attr(data-step);
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  font-size: 80px;
+  font-weight: 900;
+  color: rgba(20, 184, 166, 0.06);
+  line-height: 1;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.step-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.step-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Action box */
+.action {
+  background: var(--card-light);
+  border-right: 3px solid var(--primary-light);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin: 10px 0;
+  font-size: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.action .num {
+  background: var(--primary-light);
+  color: white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.action.warning {
+  background: rgba(245, 158, 11, 0.08);
+  border-right-color: var(--accent);
+}
+
+.action.success {
+  background: rgba(16, 185, 129, 0.08);
+  border-right-color: var(--success);
+}
+
+/* Button */
+.btn-demo {
+  display: inline-block;
+  background: var(--card-light);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 2px;
+  color: var(--text);
+}
+
+.btn-demo.green { background: #2da44e; border-color: #2da44e; color: white; }
+.btn-demo.dark { background: #24292e; border-color: #444; color: white; }
+
+/* Code box */
+.code {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--primary-light);
+  margin: 10px 0;
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+}
+
+/* Link box */
+.link-box {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(245, 158, 11, 0.1));
+  border: 1px dashed var(--primary-light);
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--primary-light);
+  direction: ltr;
+  text-align: left;
+  word-break: break-all;
+}
+
+/* Visual UI mockup */
+.ui-mockup {
+  background: #f6f8fa;
+  color: #24292e;
+  border-radius: 12px;
+  padding: 14px;
+  margin: 12px 0;
+  font-size: 13px;
+  direction: ltr;
+  text-align: left;
+  font-family: -apple-system, sans-serif;
+}
+
+.ui-mockup .ui-label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #24292e;
+}
+
+.ui-mockup .ui-input {
+  background: white;
+  border: 1px solid #d0d7de;
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.ui-mockup .ui-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.ui-mockup .ui-checkbox input { margin: 0; }
+
+.ui-mockup .ui-select {
+  background: white;
+  border: 1px solid #d0d7de;
+  padding: 6px 24px 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  position: relative;
+}
+
+/* Highlight */
+.highlight {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.kbd {
+  background: var(--card-lighter, #232c4d);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--text);
+}
+
+/* Files list */
+.files-list {
+  background: var(--card-light);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 10px 0;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 13px;
+  font-family: monospace;
+  direction: ltr;
+}
+
+.file-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+
+.file-icon { color: var(--text-muted); }
+.file-name { color: var(--text); }
+.file-desc { color: var(--text-muted); font-size: 11px; margin-right: auto; font-family: 'Vazirmatn', sans-serif; }
+
+/* Final success card */
+.success-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(20, 184, 166, 0.15));
+  border: 2px solid var(--success);
+  border-radius: 20px;
+  padding: 24px;
+  text-align: center;
+  margin: 24px 0;
+}
+
+.success-card .big-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.success-card h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--success);
+}
+
+/* FAQ */
+.faq-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+
+.faq-q {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.faq-a {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0 16px;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.divider-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Toc */
+.toc {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.toc-title {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.toc-item:last-child { border-bottom: none; }
+
+.toc-num {
+  background: var(--card-light);
+  color: var(--primary-light);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .container { padding: 16px 14px; }
+  .step-card { padding: 18px; }
+  .quick-info { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { font-size: 22px; }
+  .step-title { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-icon">🚀</div>
+    <h1>راهنمای استقرار روی GitHub Pages</h1>
+    <p>اپلیکیشن سلامتی خودتان را در ۵ دقیقه آنلاین کنید</p>
+  </div>
+
+  <!-- Quick Info -->
+  <div class="quick-info">
+    <div class="info-pill">
+      <div class="icon">⏱</div>
+      <div class="title">۵ دقیقه</div>
+      <div class="desc">زمان لازم</div>
+    </div>
+    <div class="info-pill">
+      <div class="icon">💰</div>
+      <div class="title">رایگان</div>
+      <div class="desc">برای همیشه</div>
+    </div>
+    <div class="info-pill">
+      <div class="icon">🌍</div>
+      <div class="title">آدرس دائمی</div>
+      <div class="desc">با HTTPS</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">📋 مراحل کلی:</div>
+    <a class="toc-item"><span class="toc-num">۱</span> ثبت‌نام در GitHub (اگر ندارید)</a>
+    <a class="toc-item"><span class="toc-num">۲</span> ساخت Repository جدید</a>
+    <a class="toc-item"><span class="toc-num">۳</span> آپلود فایل‌های اپلیکیشن</a>
+    <a class="toc-item"><span class="toc-num">۴</span> فعال‌سازی GitHub Pages</a>
+    <a class="toc-item"><span class="toc-num">۵</span> باز کردن لینک و نصب روی گوشی</a>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step-card" data-step="01">
+    <div class="step-content">
+      <div class="step-number">📌 مرحله ۱</div>
+      <div class="step-title">حساب GitHub بسازید</div>
+      <div class="step-desc">اگر قبلاً حساب کاربری دارید، این مرحله را رد کنید.</div>
+
+      <div class="action">
+        <div class="num">۱</div>
+        <div>به آدرس <span class="highlight">github.com</span> بروید</div>
+      </div>
+      <div class="action">
+        <div class="num">۲</div>
+        <div>روی <span class="btn-demo green">Sign up</span> در گوشه بالا کلیک کنید</div>
+      </div>
+      <div class="action">
+        <div class="num">۳</div>
+        <div>ایمیل، رمز عبور و یک نام کاربری انتخاب کنید (مثلاً <span class="kbd">siamak-health</span>)</div>
+      </div>
+      <div class="action">
+        <div class="num">۴</div>
+        <div>ایمیل خود را تأیید کنید</div>
+      </div>
+
+      <div class="action warning">
+        <div class="num">💡</div>
+        <div><strong>نکته:</strong> نام کاربری شما در آدرس نهایی نمایش داده می‌شود، پس نام مناسبی انتخاب کنید.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step-card" data-step="02">
+    <div class="step-content">
+      <div class="step-number">📦 مرحله ۲</div>
+      <div class="step-title">یک Repository جدید بسازید</div>
+      <div class="step-desc">Repository یک پوشه در GitHub است که فایل‌های شما در آن قرار می‌گیرند.</div>
+
+      <div class="action">
+        <div class="num">۱</div>
+        <div>بعد از ورود، روی دکمه <span class="btn-demo green">+</span> در گوشه بالا کلیک کنید و <span class="kbd">New repository</span> را انتخاب کنید</div>
+      </div>
+
+      <div class="action">
+        <div class="num">۲</div>
+        <div>فرم زیر را پر کنید:</div>
+      </div>
+
+      <div class="ui-mockup">
+        <div class="ui-label">Repository name *</div>
+        <div class="ui-input">health-app</div>
+        <div style="font-size: 11px; color: #57606a; margin: 4px 0 12px;">یا هر نام دیگری که دوست دارید</div>
+
+        <div class="ui-label">Description (optional)</div>
+        <div class="ui-input">برنامه شخصی سلامتی و چربی‌سوزی</div>
+
+        <div style="margin: 12px 0 8px;">
+          <div class="ui-checkbox">
+            <input type="radio" checked disabled>
+            <span><strong>Public</strong> - همه می‌توانند ببینند</span>
+          </div>
+          <div class="ui-checkbox">
+            <input type="radio" disabled>
+            <span>Private - فقط شما (ولی GitHub Pages روی رایگان کار نمی‌کند)</span>
+          </div>
+        </div>
+
+        <div class="ui-checkbox">
+          <input type="checkbox" checked disabled>
+          <span><strong>Add a README file</strong> ✓</span>
+        </div>
+      </div>
+
+      <div class="action">
+        <div class="num">۳</div>
+        <div>روی دکمه سبز <span class="btn-demo green">Create repository</span> کلیک کنید</div>
+      </div>
+
+      <div class="action warning">
+        <div class="num">⚠️</div>
+        <div><strong>مهم:</strong> برای رایگان بودن GitHub Pages، حتماً <span class="highlight">Public</span> را انتخاب کنید.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step-card" data-step="03">
+    <div class="step-content">
+      <div class="step-number">📤 مرحله ۳</div>
+      <div class="step-title">فایل‌های اپلیکیشن را آپلود کنید</div>
+      <div class="step-desc">۵ فایل اپلیکیشن را به Repository اضافه می‌کنیم.</div>
+
+      <div class="files-list">
+        <div class="file-item">
+          <span class="file-icon">📄</span>
+          <span class="file-name">index.html</span>
+          <span class="file-desc">صفحه اصلی اپ</span>
+        </div>
+        <div class="file-item">
+          <span class="file-icon">📄</span>
+          <span class="file-name">install.html</span>
+          <span class="file-desc">راهنمای نصب موبایل</span>
+        </div>
+        <div class="file-item">
+          <span class="file-icon">⚙️</span>
+          <span class="file-name">manifest.json</span>
+          <span class="file-desc">تنظیمات PWA</span>
+        </div>
+        <div class="file-item">
+          <span class="file-icon">⚡</span>
+          <span class="file-name">service-worker.js</span>
+          <span class="file-desc">پشتیبانی آفلاین</span>
+        </div>
+        <div class="file-item">
+          <span class="file-icon">🖼</span>
+          <span class="file-name">icon-192.png</span>
+          <span class="file-desc">آیکون اپ</span>
+        </div>
+        <div class="file-item">
+          <span class="file-icon">🖼</span>
+          <span class="file-name">icon-512.png</span>
+          <span class="file-desc">آیکون بزرگ اپ</span>
+        </div>
+      </div>
+
+      <div class="action">
+        <div class="num">۱</div>
+        <div>در صفحه Repository، روی <span class="kbd">Add file</span> ← <span class="kbd">Upload files</span> کلیک کنید</div>
+      </div>
+
+      <div class="action">
+        <div class="num">۲</div>
+        <div>تمام ۶ فایل بالا را با <span class="highlight">Drag and Drop</span> به صفحه بکشید (یا «choose your files» کلیک کنید)</div>
+      </div>
+
+      <div class="action">
+        <div class="num">۳</div>
+        <div>صبر کنید تا همه فایل‌ها آپلود شوند (✅ سبز)</div>
+      </div>
+
+      <div class="action">
+        <div class="num">۴</div>
+        <div>در پایین صفحه، در فیلد <span class="kbd">Commit changes</span> هر توضیحی بنویسید (یا خالی بگذارید) و دکمه سبز <span class="btn-demo green">Commit changes</span> را بزنید</div>
+      </div>
+
+      <div class="action success">
+        <div class="num">✅</div>
+        <div>تمام! فایل‌ها الان روی GitHub هستند.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step-card" data-step="04">
+    <div class="step-content">
+      <div class="step-number">🌐 مرحله ۴</div>
+      <div class="step-title">GitHub Pages را فعال کنید</div>
+      <div class="step-desc">این مرحله اپلیکیشن شما را آنلاین می‌کند.</div>
+
+      <div class="action">
+        <div class="num">۱</div>
+        <div>در صفحه Repository، روی تب <span class="kbd">⚙️ Settings</span> کلیک کنید (سمت راست بالا)</div>
+      </div>
+
+      <div class="action">
+        <div class="num">۲</div>
+        <div>از منوی سمت چپ، گزینه <span class="kbd">Pages</span> را انتخاب کنید</div>
+      </div>
+
+      <div class="action">
+        <div class="num">۳</div>
+        <div>در بخش <strong>Source</strong>، این تنظیمات را انجام دهید:</div>
+      </div>
+
+      <div class="ui-mockup">
+        <div class="ui-label">Source</div>
+        <div class="ui-select">Deploy from a branch ▾</div>
+
+        <div class="ui-label" style="margin-top: 16px;">Branch</div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <div class="ui-select">main ▾</div>
+          <div class="ui-select">/ (root) ▾</div>
+          <button style="background:#2da44e;color:white;border:none;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;">Save</button>
+        </div>
+      </div>
+
+      <div class="action">
+        <div class="num">۴</div>
+        <div>روی دکمه <span class="btn-demo green">Save</span> کلیک کنید</div>
+      </div>
+
+      <div class="action warning">
+        <div class="num">⏳</div>
+        <div><strong>صبر کنید ۱ تا ۲ دقیقه</strong> تا GitHub اپ شما را آماده کند. در همان صفحه Pages یک نوار سبز با لینک ظاهر می‌شود.</div>
+      </div>
+
+      <div class="action success">
+        <div class="num">🎉</div>
+        <div>وقتی پیام <strong>"Your site is live at..."</strong> ظاهر شد، آدرس شما این شکلی خواهد بود:</div>
+      </div>
+
+      <div class="link-box">
+        https://YOUR-USERNAME.github.io/health-app/
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step-card" data-step="05">
+    <div class="step-content">
+      <div class="step-number">📱 مرحله ۵</div>
+      <div class="step-title">روی موبایل نصب کنید</div>
+      <div class="step-desc">حالا که آنلاین است، نصب روی گوشی فقط چند ثانیه طول می‌کشد.</div>
+
+      <div class="action">
+        <div class="num">۱</div>
+        <div>لینک <span class="highlight">YOUR-USERNAME.github.io/health-app/install.html</span> را در گوشی باز کنید</div>
+      </div>
+
+      <div class="action">
+        <div class="num">۲</div>
+        <div>صفحه راهنمای نصب به‌طور خودکار تشخیص می‌دهد آیفون یا اندروید دارید</div>
+      </div>
+
+      <div class="action">
+        <div class="num">۳</div>
+        <div>مراحل تصویری را دنبال کنید</div>
+      </div>
+
+      <div class="action success">
+        <div class="num">✨</div>
+        <div>اپلیکیشن مثل یک اپ بومی روی گوشی شما نصب می‌شود!</div>
+      </div>
+
+      <div class="action">
+        <div class="num">💡</div>
+        <div><strong>نکته:</strong> اگر فقط می‌خواهید مستقیم اپ را باز کنید، آدرس <span class="highlight">YOUR-USERNAME.github.io/health-app/</span> را در مرورگر گوشی باز کنید.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-card">
+    <div class="big-icon">🎊</div>
+    <h3>تبریک! اپلیکیشن شما آماده است</h3>
+    <p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">
+      اکنون اپ روی هاست رایگان GitHub قرار دارد و از هر دستگاهی قابل دسترسی است.
+      هر بار که نیاز به به‌روزرسانی داشتید، فقط فایل‌ها را در همان Repository جایگزین کنید.
+    </p>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="divider">
+    <div class="divider-text">سوالات متداول</div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-item">
+    <div class="faq-q">❓ آیا داده‌های من خصوصی می‌ماند؟</div>
+    <div class="faq-a">بله. حتی اگر Repository شما Public باشد، داده‌هایی که شما در اپ وارد می‌کنید (وزن، یادداشت، مکمل‌ها و...) فقط روی گوشی خودتان ذخیره می‌شود. هیچ سرور و دیتابیسی در کار نیست.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ چطور اپ را به‌روزرسانی کنم؟</div>
+    <div class="faq-a">به Repository خود بروید، روی فایل مورد نظر کلیک کنید، آیکون مداد ✏️ را بزنید، تغییرات را اعمال کنید و Commit کنید. یا فایل‌ها را با Upload جایگزین کنید.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ آیا می‌توانم نام آدرس را عوض کنم؟</div>
+    <div class="faq-a">بله. در Settings → General می‌توانید نام Repository را تغییر دهید. مثلاً اگر نام را به <span class="kbd">health</span> تغییر دهید، آدرس می‌شود: <span class="kbd">YOUR-USERNAME.github.io/health/</span></div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ اگر بعداً خواستم تغییرش بدهم چی؟</div>
+    <div class="faq-a">به‌من بگو چی می‌خواهی، تغییرات را برات اعمال می‌کنم و فقط فایل index.html را روی GitHub جایگزین می‌کنی.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ محدودیت پهنای باند یا تعداد بازدید دارد؟</div>
+    <div class="faq-a">GitHub Pages تا ۱۰۰ گیگابایت پهنای باند ماهانه و ۱۰۰ گیگابایت حجم رایگان می‌دهد - برای استفاده شخصی بیش از کافی است.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q">❓ اگر مشکلی پیش آمد چه کنم؟</div>
+    <div class="faq-a">به Settings → Pages برگرد و مطمئن شو که Source روی main branch تنظیم است. اگر هنوز کار نکرد، حدود ۵-۱۰ دقیقه صبر کن (گاهی زمان می‌برد).</div>
+  </div>
+
+  <!-- Final note -->
+  <div style="text-align: center; padding: 32px 0 20px; font-size: 12px; color: var(--text-muted);">
+    💚 موفق باشید سیامک عزیز<br>
+    <span style="font-size: 11px;">برنامه شخصی سلامتی شما</span>
+  </div>
+
+</div>
+
+</body>
+</html>

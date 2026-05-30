@@ -1,0 +1,2987 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="سلامتی من">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<title>برنامه سلامتی و چربی‌سوزی</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+
+* {margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+:root {
+  --primary: #0f766e;
+  --primary-dark: #0d5a55;
+  --primary-light: #14b8a6;
+  --accent: #f59e0b;
+  --accent-light: #fbbf24;
+  --bg: #0a0f1c;
+  --card: #131a2c;
+  --card-light: #1c2440;
+  --card-lighter: #232c4d;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --success: #10b981;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  --purple: #a855f7;
+  --border: rgba(148, 163, 184, 0.1);
+  --border-strong: rgba(148, 163, 184, 0.2);
+}
+
+html, body {
+  font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: linear-gradient(180deg, #0a0f1c 0%, #131a2c 100%);
+  background-attachment: fixed;
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  padding-top: env(safe-area-inset-top);
+  overscroll-behavior-y: contain;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.app-container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-left: max(16px, env(safe-area-inset-left));
+  min-height: 100vh;
+}
+
+/* Allow text selection in inputs and notes */
+input, textarea, .note-text, .meal-items li {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Smoother scrolling */
+html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+
+/* Header */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 4px;
+  margin-bottom: 16px;
+}
+.app-header h1 {
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.app-header .subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title .icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.card-title-action {
+  margin-right: auto;
+  font-size: 13px;
+  color: var(--primary-light);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Fasting Timer */
+.fasting-card {
+  background: linear-gradient(135deg, #0f766e 0%, #134e4a 100%);
+  position: relative;
+  overflow: hidden;
+}
+.fasting-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.fasting-circle {
+  width: 220px;
+  height: 220px;
+  margin: 8px auto 20px;
+  position: relative;
+}
+.fasting-circle svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+.fasting-circle circle {
+  fill: none;
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+.fasting-bg { stroke: rgba(255,255,255,0.1); }
+.fasting-progress {
+  stroke: url(#gradient);
+  transition: stroke-dashoffset 1s;
+}
+.fasting-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.fasting-text .time {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  font-variant-numeric: tabular-nums;
+}
+.fasting-text .label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 4px;
+}
+.fasting-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0a0f1c;
+}
+.btn-success { background: var(--success); border-color: var(--success); }
+.btn-danger { background: var(--danger); border-color: var(--danger); }
+.btn-dark {
+  background: var(--card-light);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+}
+.btn-full { width: 100%; justify-content: center; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  justify-content: center;
+}
+
+/* Macros */
+.macros-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.macro-item {
+  background: var(--card-light);
+  padding: 12px 8px;
+  border-radius: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+.macro-item .value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-light);
+}
+.macro-item .label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.macro-item .unit { font-size: 10px; color: var(--text-muted); }
+.macro-bar {
+  height: 4px;
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 2px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.macro-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  border-radius: 2px;
+  transition: width 0.5s;
+}
+
+/* Tab Bar */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(19, 26, 44, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+  z-index: 100;
+}
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  min-width: 56px;
+}
+.tab-item.active {
+  color: var(--primary-light);
+  background: rgba(20, 184, 166, 0.1);
+}
+.tab-item .tab-icon { font-size: 22px; }
+.tab-item .tab-label { font-size: 10px; font-weight: 500; }
+
+/* Sections */
+.section {
+  display: none;
+  animation: fadeIn 0.3s;
+}
+.section.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.section .section-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Meal Tabs */
+.meal-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  background: var(--card-light);
+  padding: 4px;
+  border-radius: 14px;
+}
+.meal-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.meal-tab.active { background: var(--primary); color: white; }
+
+.meal-option {
+  background: var(--card-light);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  position: relative;
+}
+.meal-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+.meal-option-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-light);
+}
+.meal-badge {
+  background: rgba(20, 184, 166, 0.15);
+  color: var(--primary-light);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.meal-badge.custom {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent);
+}
+.meal-items {
+  list-style: none;
+}
+.meal-items li {
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+}
+.meal-items li:first-child { border-top: none; }
+.meal-items li::before {
+  content: '●';
+  color: var(--primary-light);
+  font-size: 10px;
+  margin-top: 4px;
+}
+.meal-macros {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.meal-macro {
+  background: var(--card-lighter);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.meal-macro strong { color: var(--text); font-weight: 600; }
+.meal-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* Supplements */
+.supplement-item {
+  background: var(--card-light);
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.supplement-item.taken {
+  opacity: 0.6;
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--success);
+}
+.supplement-check {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border-strong);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  color: transparent;
+}
+.supplement-item.taken .supplement-check {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+.supplement-info {
+  flex: 1;
+  min-width: 0;
+}
+.supplement-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+.supplement-dose {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.supplement-actions {
+  display: flex;
+  gap: 4px;
+}
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--card-lighter);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+.icon-btn:hover, .icon-btn:active { color: var(--text); }
+
+.time-section { margin-bottom: 16px; }
+.time-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+.time-section-header .time-icon { font-size: 18px; }
+.time-section-header .time-title { font-size: 14px; font-weight: 600; color: var(--text); }
+.time-section-header .time-meta { font-size: 11px; color: var(--text-muted); margin-right: auto; }
+
+/* Walking */
+.walking-card {
+  background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+  text-align: center;
+  padding: 24px;
+}
+.walking-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+.walking-stat {
+  background: rgba(255,255,255,0.15);
+  padding: 12px;
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+.walking-stat .value {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+}
+.walking-stat .label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+  margin-top: 2px;
+}
+.walking-timer {
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+  font-variant-numeric: tabular-nums;
+  margin: 12px 0;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  cursor: pointer;
+}
+.stat-card .stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.stat-card .stat-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.stat-card .stat-icon.orange { background: rgba(245, 158, 11, 0.15); color: var(--accent); }
+.stat-card .stat-icon.blue { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+.stat-card .stat-icon.purple { background: rgba(168, 85, 247, 0.15); color: var(--purple); }
+.stat-card .stat-icon.red { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+.stat-card .stat-value { font-size: 22px; font-weight: 700; }
+.stat-card .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Info notes */
+.info-note {
+  background: rgba(20, 184, 166, 0.08);
+  border-right: 3px solid var(--primary-light);
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.7;
+  margin-top: 12px;
+}
+.info-note strong { color: var(--primary-light); }
+.info-note.warning {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: var(--accent);
+}
+.info-note.warning strong { color: var(--accent); }
+
+/* Progress */
+.progress-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.progress-label { font-size: 13px; color: var(--text); }
+.progress-value { font-size: 13px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+/* Day Selector */
+.day-selector {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.day-chip {
+  padding: 8px 14px;
+  background: var(--card-light);
+  border-radius: 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  border: 1px solid var(--border);
+}
+.day-chip.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: var(--card-light);
+  border: 1px solid var(--success);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  z-index: 300;
+  transition: transform 0.3s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  max-width: 90%;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 640px;
+  max-height: 92vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  z-index: 10;
+}
+.modal-title { font-size: 18px; font-weight: 700; }
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--card-light);
+  border: none;
+  color: var(--text);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-body { padding: 20px; }
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--border-strong);
+  border-radius: 2px;
+  margin: 8px auto 0;
+}
+
+/* Form */
+.form-group { margin-bottom: 14px; }
+.form-label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  background: var(--card-light);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--primary-light);
+}
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* Add button */
+.fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+}
+.fab.large {
+  padding: 14px 20px;
+  font-size: 14px;
+}
+
+/* Water tracker */
+.water-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+.water-cup {
+  aspect-ratio: 1;
+  background: var(--card-light);
+  border: 2px solid var(--border-strong);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0.4;
+}
+.water-cup.filled {
+  background: linear-gradient(180deg, transparent 0%, rgba(59, 130, 246, 0.3) 100%);
+  border-color: var(--info);
+  opacity: 1;
+}
+
+/* Weight input */
+.weight-input-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.weight-display {
+  font-size: 48px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary-light);
+}
+.weight-unit {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+.weight-change {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+  display: inline-block;
+}
+.weight-change.down { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.weight-change.up { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+.weight-change.same { background: var(--card-light); color: var(--text-muted); }
+
+/* Mood selector */
+.mood-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+.mood-option {
+  background: var(--card-light);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 14px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mood-option .mood-emoji { font-size: 28px; }
+.mood-option .mood-label { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+.mood-option.selected {
+  border-color: var(--primary-light);
+  background: rgba(20, 184, 166, 0.1);
+}
+
+/* Sleep */
+.sleep-stars {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 12px 0;
+}
+.sleep-star {
+  font-size: 32px;
+  color: var(--border-strong);
+  cursor: pointer;
+}
+.sleep-star.active { color: var(--accent); }
+
+/* Chart */
+.chart-container {
+  height: 180px;
+  position: relative;
+  margin: 12px 0;
+}
+.chart-container svg {
+  width: 100%;
+  height: 100%;
+}
+.chart-grid line {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+.chart-line {
+  fill: none;
+  stroke: var(--primary-light);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.chart-area { fill: url(#chartGrad); }
+.chart-point {
+  fill: var(--primary-light);
+  stroke: var(--card);
+  stroke-width: 2;
+}
+.chart-label {
+  fill: var(--text-muted);
+  font-size: 10px;
+  font-family: inherit;
+}
+
+/* Notes */
+.note-item {
+  background: var(--card-light);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  border-right: 3px solid var(--primary-light);
+}
+.note-date {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.note-text {
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+/* Settings */
+.settings-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--card-light);
+  border-radius: 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.settings-label { font-size: 14px; font-weight: 500; }
+.settings-value { font-size: 13px; color: var(--text-muted); }
+.settings-divider {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 16px 4px 8px;
+  font-weight: 600;
+}
+
+/* Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--border-strong);
+  transition: 0.3s;
+  border-radius: 24px;
+}
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  right: 3px;
+  bottom: 3px;
+  background: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+input:checked + .slider { background: var(--primary-light); }
+input:checked + .slider::before { transform: translateX(-20px); }
+
+/* Achievement */
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.achievement-item {
+  background: var(--card-light);
+  border-radius: 14px;
+  padding: 12px 8px;
+  text-align: center;
+  opacity: 0.4;
+}
+.achievement-item.unlocked {
+  opacity: 1;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(20, 184, 166, 0.15));
+  border: 1px solid var(--accent);
+}
+.achievement-icon { font-size: 28px; margin-bottom: 6px; }
+.achievement-name { font-size: 11px; font-weight: 600; }
+.achievement-desc { font-size: 9px; color: var(--text-muted); margin-top: 2px; }
+
+/* Install Prompt */
+.install-prompt {
+  position: fixed;
+  bottom: 100px;
+  left: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  padding: 14px 16px;
+  border-radius: 16px;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(20, 184, 166, 0.3);
+  z-index: 99;
+  max-width: 608px;
+  margin: 0 auto;
+}
+.install-prompt.show { display: flex; }
+.install-prompt .text { flex: 1; font-size: 13px; color: white; }
+.install-prompt button {
+  background: white;
+  color: var(--primary);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+.close-install {
+  background: rgba(255,255,255,0.2) !important;
+  color: white !important;
+  padding: 6px 10px !important;
+}
+
+/* More menu */
+.more-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.more-item {
+  background: var(--card-light);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.more-item:active { transform: scale(0.97); }
+.more-item .more-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+.more-item .more-label { font-size: 13px; font-weight: 600; }
+.more-item .more-desc { font-size: 10px; color: var(--text-muted); text-align: center; }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 30px 20px;
+  color: var(--text-muted);
+}
+.empty-state .empty-icon { font-size: 48px; margin-bottom: 10px; opacity: 0.5; }
+.empty-state .empty-text { font-size: 13px; }
+
+/* Confirm dialog */
+.confirm-dialog {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 24px;
+  max-width: 320px;
+  margin: auto;
+  text-align: center;
+}
+.confirm-dialog h3 { font-size: 16px; margin-bottom: 8px; }
+.confirm-dialog p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+.confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+.confirm-actions .btn { flex: 1; justify-content: center; }
+
+.modal-overlay.center {
+  align-items: center;
+  padding: 20px;
+}
+
+@media (max-width: 380px) {
+  .fasting-text .time { font-size: 26px; }
+  .macros-grid { gap: 6px; }
+  .macro-item .value { font-size: 16px; }
+  .walking-timer { font-size: 38px; }
+}
+
+/* iOS install banner */
+.ios-banner {
+  position: fixed;
+  bottom: calc(90px + env(safe-area-inset-bottom));
+  left: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: none;
+  z-index: 99;
+  max-width: 608px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(20, 184, 166, 0.3);
+  animation: slideUpIos 0.4s;
+}
+.ios-banner.show { display: block; }
+@keyframes slideUpIos {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.ios-banner-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+.ios-banner-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+.ios-banner-text {
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.ios-banner-text strong { font-size: 13px; }
+.ios-banner-close {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+}
+.ios-arrow {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin: 0 2px;
+}
+
+/* Pull to refresh indicator */
+.pull-indicator {
+  position: fixed;
+  top: env(safe-area-inset-top);
+  left: 50%;
+  transform: translateX(-50%) translateY(-60px);
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+  z-index: 50;
+  transition: transform 0.3s;
+}
+.pull-indicator.show { transform: translateX(-50%) translateY(20px); }
+
+/* Tab item active animation */
+.tab-item.active .tab-icon {
+  animation: bounce 0.4s ease-out;
+}
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Improve all tap targets for mobile */
+.btn, .icon-btn, .tab-item, .meal-tab, .day-chip, .more-item, .stat-card, .settings-item, .water-cup, .mood-option, .supplement-item {
+  touch-action: manipulation;
+}
+
+/* Smoother button press */
+.btn:active, .icon-btn:active, .more-item:active, .stat-card:active, .settings-item:active {
+  transform: scale(0.97);
+  transition: transform 0.1s;
+}
+
+/* Hide scrollbars but keep functional */
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* Standalone mode (installed PWA) - hide install prompts */
+@media all and (display-mode: standalone) {
+  .install-prompt, .ios-banner { display: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- Header -->
+  <div class="app-header">
+    <div>
+      <h1 id="appTitle">برنامه سلامتی من</h1>
+      <div class="subtitle" id="appSubtitle">چربی‌سوزی شکمی + تقویت مغز</div>
+    </div>
+    <div class="user-avatar" id="userAvatar">س</div>
+  </div>
+
+  <!-- DASHBOARD SECTION -->
+  <div class="section active" id="dashboard">
+
+    <!-- Fasting Timer -->
+    <div class="card fasting-card">
+      <div class="card-title" style="color:white;">
+        <div class="icon">⏱</div>
+        <span id="fastingTitle">روزه‌داری متناوب (۱۴ ساعت)</span>
+      </div>
+      <div class="fasting-circle">
+        <svg viewBox="0 0 220 220">
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#14b8a6"/>
+            </linearGradient>
+          </defs>
+          <circle class="fasting-bg" cx="110" cy="110" r="95"/>
+          <circle class="fasting-progress" cx="110" cy="110" r="95"
+                  stroke-dasharray="596.9" stroke-dashoffset="596.9" id="fastingProgress"/>
+        </svg>
+        <div class="fasting-text">
+          <div class="time" id="fastingTime">۱۴:۰۰:۰۰</div>
+          <div class="label" id="fastingLabel">برای شروع لمس کنید</div>
+        </div>
+      </div>
+      <div class="fasting-controls">
+        <button class="btn btn-primary" id="startFastingBtn">شروع روزه</button>
+        <button class="btn" id="resetFastingBtn">ریست</button>
+      </div>
+    </div>
+
+    <!-- Macros -->
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">🍽</div>
+        ماکروهای امروز
+      </div>
+      <div class="macros-grid">
+        <div class="macro-item">
+          <div class="value" id="dispCalories">۱۴۹۰</div>
+          <div class="label">کالری</div>
+          <div class="unit">kcal</div>
+        </div>
+        <div class="macro-item">
+          <div class="value" id="dispProtein">۱۳۵</div>
+          <div class="label">پروتئین</div>
+          <div class="unit">گرم</div>
+        </div>
+        <div class="macro-item">
+          <div class="value" id="dispCarbs">۸۷</div>
+          <div class="label">کربوهیدرات</div>
+          <div class="unit">گرم</div>
+        </div>
+        <div class="macro-item">
+          <div class="value" id="dispFat">۶۰</div>
+          <div class="label">چربی</div>
+          <div class="unit">گرم</div>
+        </div>
+      </div>
+      <div class="info-note">
+        <strong>توزیع کربوهیدرات:</strong> مصرف بیشتر در صبح و کاهش کامل در شام برای جلوگیری از ذخیره چربی شکم.
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="stats-grid">
+      <div class="stat-card" onclick="switchTab('supplements')">
+        <div class="stat-icon green">💊</div>
+        <div class="stat-value" id="suppCount">۰/۴</div>
+        <div class="stat-label">مکمل‌های امروز</div>
+      </div>
+      <div class="stat-card" onclick="switchTab('walking')">
+        <div class="stat-icon orange">🚶</div>
+        <div class="stat-value" id="walkProgress">۰</div>
+        <div class="stat-label">دقیقه پیاده‌روی</div>
+      </div>
+      <div class="stat-card" onclick="openTracker('water')">
+        <div class="stat-icon blue">💧</div>
+        <div class="stat-value" id="waterCount">۰/۸</div>
+        <div class="stat-label">لیوان آب</div>
+      </div>
+      <div class="stat-card" onclick="openTracker('weight')">
+        <div class="stat-icon purple">⚖️</div>
+        <div class="stat-value" id="weightDisplay">—</div>
+        <div class="stat-label">وزن (کیلوگرم)</div>
+      </div>
+    </div>
+
+    <!-- Today's plan -->
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">📋</div>
+        خلاصه برنامه امروز
+      </div>
+      <ul class="meal-items">
+        <li>صبحانه ثابت + داروهای صبح</li>
+        <li>۳۰ دقیقه پیاده‌روی متوسط رو به تند</li>
+        <li>ناهار طبق برنامه + مکمل امگا-۳</li>
+        <li>شام سبک قبل از ساعت ۸ شب</li>
+        <li>شروع روزه‌داری ۱۴ ساعته</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MEALS SECTION -->
+  <div class="section" id="meals">
+    <div class="section-header">
+      <div>
+        <h2>برنامه غذایی</h2>
+        <p class="section-subtitle">۱۴۹۰ کالری | ۱۳۵ پروتئین | ۸۷ کربوهیدرات | ۶۰ چربی</p>
+      </div>
+      <button class="fab" onclick="openAddMealModal()">+ افزودن</button>
+    </div>
+
+    <div class="meal-tabs">
+      <div class="meal-tab active" data-meal="breakfast">صبحانه</div>
+      <div class="meal-tab" data-meal="lunch">ناهار</div>
+      <div class="meal-tab" data-meal="dinner">شام</div>
+      <div class="meal-tab" data-meal="snack">میان‌وعده</div>
+    </div>
+
+    <div class="meal-content" id="mealBreakfast"></div>
+    <div class="meal-content" id="mealLunch" style="display:none;"></div>
+    <div class="meal-content" id="mealDinner" style="display:none;"></div>
+    <div class="meal-content" id="mealSnack" style="display:none;"></div>
+  </div>
+
+  <!-- SUPPLEMENTS SECTION -->
+  <div class="section" id="supplements">
+    <div class="section-header">
+      <div>
+        <h2>دارو و مکمل‌ها</h2>
+        <p class="section-subtitle">برنامه دقیق زمان‌بندی شده</p>
+      </div>
+      <button class="fab" onclick="openAddSuppModal()">+ افزودن</button>
+    </div>
+
+    <div id="suppMorning" class="time-section">
+      <div class="time-section-header">
+        <span class="time-icon">🌅</span>
+        <span class="time-title">صبح (همراه صبحانه)</span>
+        <span class="time-meta">۰۷:۰۰ - ۰۸:۰۰</span>
+      </div>
+      <div id="suppMorningList"></div>
+    </div>
+
+    <div id="suppNoon" class="time-section">
+      <div class="time-section-header">
+        <span class="time-icon">☀️</span>
+        <span class="time-title">ظهر (همراه ناهار)</span>
+        <span class="time-meta">۱۲:۳۰ - ۱۳:۳۰</span>
+      </div>
+      <div id="suppNoonList"></div>
+    </div>
+
+    <div id="suppEvening" class="time-section">
+      <div class="time-section-header">
+        <span class="time-icon">🌆</span>
+        <span class="time-title">عصر (همراه عصرانه)</span>
+        <span class="time-meta">۱۶:۰۰ - ۱۸:۰۰</span>
+      </div>
+      <div id="suppEveningList"></div>
+    </div>
+
+    <div id="suppNight" class="time-section">
+      <div class="time-section-header">
+        <span class="time-icon">🌙</span>
+        <span class="time-title">شب (قبل از خواب)</span>
+        <span class="time-meta">۲۱:۰۰ - ۲۲:۳۰</span>
+      </div>
+      <div id="suppNightList"></div>
+    </div>
+
+    <div class="info-note">
+      <strong>💡 نکته بالینی:</strong> مصرف فسفاتیدیل‌سرین صبح‌ها و امگا-۳ همراه با وعده غذایی چرب، بیشترین اثر را بر بازسازی عصبی و عملکرد شناختی دارد.
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">
+        <div class="icon">📊</div>
+        پیشرفت امروز
+      </div>
+      <div class="progress-row">
+        <span class="progress-label">مکمل‌های مصرف شده</span>
+        <span class="progress-value" id="suppProgressText">۰ از ۰</span>
+      </div>
+      <div class="macro-bar">
+        <div class="macro-bar-fill" id="suppProgressBar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WALKING SECTION -->
+  <div class="section" id="walking">
+    <h2>پیاده‌روی و ورزش</h2>
+    <p class="section-subtitle">روزانه ۳۰ دقیقه - سرعت متوسط رو به تند</p>
+
+    <div class="card walking-card">
+      <div style="font-size:14px;color:rgba(255,255,255,0.9);margin-bottom:8px;">پیاده‌روی امروز</div>
+      <div class="walking-timer" id="walkTimer">۰۰:۰۰</div>
+      <div class="walking-stats">
+        <div class="walking-stat">
+          <div class="value" id="walkMinutes">۰</div>
+          <div class="label">دقیقه</div>
+        </div>
+        <div class="walking-stat">
+          <div class="value" id="walkCalories">۰</div>
+          <div class="label">کالری</div>
+        </div>
+        <div class="walking-stat">
+          <div class="value" id="walkGoal">۳۰</div>
+          <div class="label">هدف</div>
+        </div>
+      </div>
+      <div class="fasting-controls">
+        <button class="btn" id="startWalkBtn">شروع</button>
+        <button class="btn" id="stopWalkBtn">توقف</button>
+        <button class="btn" id="addWalkBtn">+ افزودن دستی</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">📈</div>
+        روند ۷ روز اخیر
+      </div>
+      <div class="chart-container" id="walkChart"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <div class="icon">💪</div>
+        مزایای بالینی
+      </div>
+      <ul class="meal-items">
+        <li>چربی‌سوزی شکمی هدفمند</li>
+        <li>افزایش جریان خون مغزی (Cerebral Blood Flow)</li>
+        <li>تقویت اثر برینتلیکس در بازسازی شناختی</li>
+        <li>کاهش هورمون کورتیزول استرس</li>
+        <li>بهبود کیفیت خواب شبانه</li>
+      </ul>
+      <div class="info-note">
+        <strong>منبع:</strong> Cochrane Database of Systematic Reviews - مطالعات کلینیکی فعالیت بدنی و عملکرد شناختی
+      </div>
+    </div>
+  </div>
+
+  <!-- MORE SECTION -->
+  <div class="section" id="more">
+    <h2>امکانات بیشتر</h2>
+    <p class="section-subtitle">ردیاب‌ها، یادداشت‌ها و تنظیمات</p>
+
+    <div class="more-grid">
+      <div class="more-item" onclick="openTracker('water')">
+        <div class="more-icon" style="background:rgba(59,130,246,0.15);color:var(--info);">💧</div>
+        <div class="more-label">ردیاب آب</div>
+        <div class="more-desc">۸ لیوان روزانه</div>
+      </div>
+      <div class="more-item" onclick="openTracker('weight')">
+        <div class="more-icon" style="background:rgba(168,85,247,0.15);color:var(--purple);">⚖️</div>
+        <div class="more-label">ردیاب وزن</div>
+        <div class="more-desc">روند کاهش وزن</div>
+      </div>
+      <div class="more-item" onclick="openTracker('sleep')">
+        <div class="more-icon" style="background:rgba(15,118,110,0.15);color:var(--primary-light);">😴</div>
+        <div class="more-label">ردیاب خواب</div>
+        <div class="more-desc">کیفیت و ساعت</div>
+      </div>
+      <div class="more-item" onclick="openTracker('mood')">
+        <div class="more-icon" style="background:rgba(245,158,11,0.15);color:var(--accent);">😊</div>
+        <div class="more-label">حس و انرژی</div>
+        <div class="more-desc">پیگیری روزانه</div>
+      </div>
+      <div class="more-item" onclick="openNotes()">
+        <div class="more-icon" style="background:rgba(16,185,129,0.15);color:var(--success);">📝</div>
+        <div class="more-label">یادداشت روزانه</div>
+        <div class="more-desc">دفترچه شخصی</div>
+      </div>
+      <div class="more-item" onclick="openCharts()">
+        <div class="more-icon" style="background:rgba(239,68,68,0.15);color:var(--danger);">📊</div>
+        <div class="more-label">نمودارها</div>
+        <div class="more-desc">آمار و روندها</div>
+      </div>
+      <div class="more-item" onclick="openAchievements()">
+        <div class="more-icon" style="background:rgba(245,158,11,0.15);color:var(--accent);">🏆</div>
+        <div class="more-label">دستاوردها</div>
+        <div class="more-desc">جوایز و نشان‌ها</div>
+      </div>
+      <div class="more-item" onclick="openSettings()">
+        <div class="more-icon" style="background:rgba(148,163,184,0.15);color:var(--text-muted);">⚙️</div>
+        <div class="more-label">تنظیمات</div>
+        <div class="more-desc">شخصی‌سازی برنامه</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;text-align:center;">
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">
+        نسخه ۲.۰ - برنامه شخصی سلامتی
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);">
+        ⚠️ این برنامه جایگزین مشاوره پزشک نیست
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">عنوان</div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Confirm Dialog -->
+  <div class="modal-overlay center" id="confirmOverlay">
+    <div class="confirm-dialog">
+      <h3 id="confirmTitle">آیا مطمئن هستید؟</h3>
+      <p id="confirmText">این عملیات قابل بازگشت نیست.</p>
+      <div class="confirm-actions">
+        <button class="btn btn-dark" onclick="closeConfirm()">لغو</button>
+        <button class="btn btn-danger" id="confirmYes">بله</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Install Prompt (Android/Desktop) -->
+  <div class="install-prompt" id="installPrompt">
+    <div style="font-size:24px;">📱</div>
+    <div class="text">نصب اپلیکیشن روی موبایل</div>
+    <button id="installBtn">نصب</button>
+    <button class="close-install" id="closeInstallBtn">✕</button>
+  </div>
+
+  <!-- iOS Install Banner -->
+  <div class="ios-banner" id="iosBanner">
+    <div class="ios-banner-content">
+      <div class="ios-banner-icon">📲</div>
+      <div class="ios-banner-text">
+        <strong>نصب روی آیفون</strong><br>
+        روی <span class="ios-arrow">⬆️</span> در سافاری بزنید سپس <strong>«Add to Home Screen»</strong>
+      </div>
+      <button class="ios-banner-close" id="iosCloseBtn">✕</button>
+    </div>
+  </div>
+
+  <!-- Pull to refresh -->
+  <div class="pull-indicator" id="pullIndicator">↓ برای بروزرسانی بکشید</div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+</div>
+
+<!-- Bottom Tab Bar -->
+<div class="tab-bar">
+  <div class="tab-item active" data-tab="dashboard">
+    <div class="tab-icon">🏠</div>
+    <div class="tab-label">داشبورد</div>
+  </div>
+  <div class="tab-item" data-tab="meals">
+    <div class="tab-icon">🍽</div>
+    <div class="tab-label">غذا</div>
+  </div>
+  <div class="tab-item" data-tab="supplements">
+    <div class="tab-icon">💊</div>
+    <div class="tab-label">مکمل</div>
+  </div>
+  <div class="tab-item" data-tab="walking">
+    <div class="tab-icon">🚶</div>
+    <div class="tab-label">ورزش</div>
+  </div>
+  <div class="tab-item" data-tab="more">
+    <div class="tab-icon">⋯</div>
+    <div class="tab-label">بیشتر</div>
+  </div>
+</div>
+
+<script>
+// ============= STORAGE =============
+const Storage = {
+  get(key, def=null) { try { return JSON.parse(localStorage.getItem(key)) ?? def; } catch { return def; } },
+  set(key, val) { localStorage.setItem(key, JSON.stringify(val)); },
+  remove(key) { localStorage.removeItem(key); }
+};
+
+function toPersianNum(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+function toEnglishNum(n) { return String(n).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)); }
+function today() { return new Date().toDateString(); }
+function dateKey(d=new Date()) {
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+// ============= DEFAULT DATA =============
+const DEFAULT_SETTINGS = {
+  calorieTarget: 1490,
+  proteinTarget: 135,
+  carbsTarget: 87,
+  fatTarget: 60,
+  fastingHours: 14,
+  walkingGoal: 30,
+  waterGoal: 8,
+  userName: 'سیامک',
+  notifications: false
+};
+
+const DEFAULT_MEALS = {
+  breakfast: [{
+    id: 'default-b1',
+    title: 'صبحانه ثابت روزانه',
+    badge: 'ثابت',
+    items: [
+      '۲ عدد تخم‌مرغ کامل آب‌پز',
+      '۳۰ گرم نان سبوس‌دار (سنگک یا جو)',
+      'چای یا قهوه بدون قند'
+    ],
+    macros: { cal: 280, p: 18, c: 18, f: 14 },
+    note: 'زمان مصرف داروها: برینتلیکس + ال-تیانین + فسفاتیدیل‌سرین',
+    isDefault: true
+  }],
+  lunch: [
+    {
+      id: 'default-l1',
+      title: 'گزینه ۱ - پروتئین بالا',
+      badge: 'پروتئین بالا',
+      items: [
+        '۲۰۰ گرم سینه مرغ گریل شده',
+        '۱ فنجان کلم بروکلی بخارپز',
+        'سالاد فصل با ۱ قاشق غذاخوری روغن زیتون بکر'
+      ],
+      macros: { cal: 420, p: 55, c: 12, f: 18 },
+      isDefault: true
+    },
+    {
+      id: 'default-l2',
+      title: 'گزینه ۲ - امگا-۳',
+      badge: 'امگا-۳',
+      items: [
+        '۱۵۰ گرم فیله ماهی قزل‌آلا یا سالمون کبابی',
+        '۶ قاشق غذاخوری برنج قهوه‌ای یا کینوا',
+        'سالاد خیار و گوجه با آبلیمو'
+      ],
+      macros: { cal: 480, p: 38, c: 35, f: 22 },
+      isDefault: true
+    },
+    {
+      id: 'default-l3',
+      title: 'گزینه ۳ - کم‌چرب',
+      badge: 'کم‌چرب',
+      items: [
+        '۱۸۰ گرم بوقلمون چرخ‌کرده پخته با قارچ و پیاز',
+        'سالاد اسفناج و کاهو با سرکه سیب'
+      ],
+      macros: { cal: 380, p: 48, c: 8, f: 16 },
+      isDefault: true
+    }
+  ],
+  dinner: [
+    {
+      id: 'default-d1',
+      title: 'گزینه ۱ - سبزیجاتی',
+      badge: 'سبزیجاتی',
+      items: ['خوراک سبزیجات مجاز (کدو، بادمجان، قارچ، گوجه‌فرنگی)', '۱۰۰ گرم فیله مرغ'],
+      macros: { cal: 280, p: 28, c: 18, f: 10 },
+      isDefault: true
+    },
+    {
+      id: 'default-d2',
+      title: 'گزینه ۲ - حبوبات',
+      badge: 'حبوبات',
+      items: ['یک کاسه متوسط عدسی یا خوراک لوبیا چیتی بدون روغن', 'سالاد کاهو'],
+      macros: { cal: 320, p: 18, c: 42, f: 6 },
+      isDefault: true
+    },
+    {
+      id: 'default-d3',
+      title: 'گزینه ۳ - گرم و سبک',
+      badge: 'گرم و سبک',
+      items: ['سوپ مرغ غلیظ با سبزیجات و مرغ', 'بدون رشته و آویشن'],
+      macros: { cal: 240, p: 24, c: 14, f: 8 },
+      isDefault: true
+    }
+  ],
+  snack: []
+};
+
+const DEFAULT_SUPPLEMENTS = [
+  { id: 'def-s1', name: 'برینتلیکس (Brintellix)', dose: '۲۰ میلی‌گرم', time: 'morning', isDefault: true },
+  { id: 'def-s2', name: 'ال-تیانین (L-Theanine)', dose: '۲۰۰ میلی‌گرم', time: 'morning', isDefault: true },
+  { id: 'def-s3', name: 'فسفاتیدیل‌سرین', dose: '۱۰۰ میلی‌گرم (کپسول تازه)', time: 'morning', isDefault: true },
+  { id: 'def-s4', name: 'مکمل امگا-۳', dose: 'بالاترین جذب با چربی ناهار', time: 'noon', isDefault: true }
+];
+
+// ============= STATE =============
+let settings = Storage.get('settings') || DEFAULT_SETTINGS;
+let meals = Storage.get('meals') || DEFAULT_MEALS;
+let supplements = Storage.get('supplements') || DEFAULT_SUPPLEMENTS;
+
+// ensure all keys exist
+settings = { ...DEFAULT_SETTINGS, ...settings };
+['breakfast','lunch','dinner','snack'].forEach(k => { if (!meals[k]) meals[k] = []; });
+
+function saveAll() {
+  Storage.set('settings', settings);
+  Storage.set('meals', meals);
+  Storage.set('supplements', supplements);
+}
+
+// ============= NAVIGATION =============
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.tab-item[data-tab="${tabName}"]`)?.classList.add('active');
+  document.getElementById(tabName)?.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.querySelectorAll('.tab-item').forEach(tab => {
+  tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+});
+
+document.querySelectorAll('.meal-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.meal-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.meal-content').forEach(c => c.style.display = 'none');
+    tab.classList.add('active');
+    const map = { breakfast: 'mealBreakfast', lunch: 'mealLunch', dinner: 'mealDinner', snack: 'mealSnack' };
+    document.getElementById(map[tab.dataset.meal]).style.display = 'block';
+  });
+});
+
+// ============= FASTING TIMER =============
+let fastingStart = Storage.get('fastingStart');
+
+function updateFasting() {
+  const FAST_DURATION = settings.fastingHours * 60 * 60 * 1000;
+  const progressEl = document.getElementById('fastingProgress');
+  const timeEl = document.getElementById('fastingTime');
+  const labelEl = document.getElementById('fastingLabel');
+  const startBtn = document.getElementById('startFastingBtn');
+  document.getElementById('fastingTitle').textContent = `روزه‌داری متناوب (${toPersianNum(settings.fastingHours)} ساعت)`;
+
+  if (!fastingStart) {
+    timeEl.textContent = toPersianNum(String(settings.fastingHours).padStart(2,'0')) + ':۰۰:۰۰';
+    labelEl.textContent = 'برای شروع لمس کنید';
+    progressEl.setAttribute('stroke-dashoffset', 596.9);
+    startBtn.textContent = 'شروع روزه';
+    return;
+  }
+
+  const elapsed = Date.now() - fastingStart;
+  const remaining = Math.max(0, FAST_DURATION - elapsed);
+  const progress = Math.min(elapsed / FAST_DURATION, 1);
+
+  const totalSec = Math.floor(remaining / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  timeEl.textContent = toPersianNum(String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'));
+  progressEl.setAttribute('stroke-dashoffset', 596.9 * (1 - progress));
+
+  if (remaining === 0) {
+    labelEl.textContent = '✅ روزه کامل شد!';
+    startBtn.textContent = 'پایان';
+    const dk = dateKey();
+    if (!Storage.get('fastCompleted_' + dk)) {
+      Storage.set('fastCompleted_' + dk, true);
+      const total = Storage.get('totalFasts', 0) + 1;
+      Storage.set('totalFasts', total);
+      showToast('🎉 تبریک! روزه کامل شد');
+      checkAchievements();
+    }
+  } else {
+    labelEl.textContent = 'در حال روزه‌داری';
+    startBtn.textContent = 'در حال انجام...';
+  }
+}
+
+document.getElementById('startFastingBtn').addEventListener('click', () => {
+  if (!fastingStart) {
+    fastingStart = Date.now();
+    Storage.set('fastingStart', fastingStart);
+    showToast('⏱ روزه‌داری شروع شد');
+  }
+  updateFasting();
+});
+document.getElementById('resetFastingBtn').addEventListener('click', () => {
+  confirm_('ریست روزه‌داری', 'تایمر روزه‌داری ریست خواهد شد.', () => {
+    fastingStart = null;
+    Storage.set('fastingStart', null);
+    updateFasting();
+    showToast('روزه‌داری ریست شد');
+  });
+});
+
+setInterval(updateFasting, 1000);
+
+// ============= MEALS =============
+function renderMeals() {
+  ['breakfast','lunch','dinner','snack'].forEach(type => {
+    const container = document.getElementById('meal' + type.charAt(0).toUpperCase() + type.slice(1));
+    container.innerHTML = '';
+    const list = meals[type] || [];
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-state"><div class="empty-icon">🍽</div><div class="empty-text">هنوز وعده‌ای ثبت نشده<br>روی دکمه «افزودن» بزنید</div></div>`;
+      return;
+    }
+    list.forEach(meal => {
+      const isCustom = !meal.isDefault;
+      const macros = meal.macros || {};
+      container.innerHTML += `
+        <div class="meal-option">
+          <div class="meal-option-header">
+            <div class="meal-option-title">${meal.title}</div>
+            <div class="meal-badge ${isCustom ? 'custom' : ''}">${meal.badge || (isCustom ? 'دلخواه' : 'پیش‌فرض')}</div>
+          </div>
+          <ul class="meal-items">
+            ${meal.items.map(i => `<li>${i}</li>`).join('')}
+          </ul>
+          ${(macros.cal || macros.p) ? `
+          <div class="meal-macros">
+            <div class="meal-macro">کالری: <strong>${toPersianNum(macros.cal || 0)}</strong></div>
+            <div class="meal-macro">پروتئین: <strong>${toPersianNum(macros.p || 0)}g</strong></div>
+            <div class="meal-macro">کربو: <strong>${toPersianNum(macros.c || 0)}g</strong></div>
+            <div class="meal-macro">چربی: <strong>${toPersianNum(macros.f || 0)}g</strong></div>
+          </div>` : ''}
+          ${meal.note ? `<div class="info-note" style="margin-top:10px;"><strong>نکته:</strong> ${meal.note}</div>` : ''}
+          ${isCustom ? `
+          <div class="meal-actions">
+            <button class="btn btn-dark btn-sm" onclick="editMeal('${type}', '${meal.id}')">✏️ ویرایش</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteMeal('${type}', '${meal.id}')">🗑 حذف</button>
+          </div>` : ''}
+        </div>`;
+    });
+  });
+}
+
+let editingMeal = null;
+function openAddMealModal(type=null, mealId=null) {
+  editingMeal = null;
+  let activeTab = type || document.querySelector('.meal-tab.active').dataset.meal;
+  let meal = null;
+  if (mealId) {
+    meal = (meals[activeTab] || []).find(m => m.id === mealId);
+    if (meal) editingMeal = { type: activeTab, id: mealId };
+  }
+
+  document.getElementById('modalTitle').textContent = mealId ? 'ویرایش وعده' : 'افزودن وعده جدید';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">نوع وعده</label>
+      <select class="form-select" id="newMealType">
+        <option value="breakfast" ${activeTab==='breakfast'?'selected':''}>صبحانه</option>
+        <option value="lunch" ${activeTab==='lunch'?'selected':''}>ناهار</option>
+        <option value="dinner" ${activeTab==='dinner'?'selected':''}>شام</option>
+        <option value="snack" ${activeTab==='snack'?'selected':''}>میان‌وعده</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">عنوان</label>
+      <input type="text" class="form-input" id="newMealTitle" placeholder="مثال: ناهار پروتئینی" value="${meal?.title||''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">برچسب (اختیاری)</label>
+      <input type="text" class="form-input" id="newMealBadge" placeholder="مثال: پروتئین بالا" value="${meal?.badge||''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">مواد و اجزا (هر خط یک مورد)</label>
+      <textarea class="form-textarea" id="newMealItems" placeholder="۲۰۰ گرم مرغ گریل&#10;سالاد سبز&#10;...">${meal?.items?.join('\n')||''}</textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">اطلاعات تغذیه‌ای</label>
+      <div class="form-row">
+        <input type="number" class="form-input" id="newMealCal" placeholder="کالری" value="${meal?.macros?.cal||''}">
+        <input type="number" class="form-input" id="newMealP" placeholder="پروتئین (g)" value="${meal?.macros?.p||''}">
+      </div>
+      <div class="form-row" style="margin-top:10px;">
+        <input type="number" class="form-input" id="newMealC" placeholder="کربوهیدرات (g)" value="${meal?.macros?.c||''}">
+        <input type="number" class="form-input" id="newMealF" placeholder="چربی (g)" value="${meal?.macros?.f||''}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">نکته (اختیاری)</label>
+      <textarea class="form-textarea" id="newMealNote" placeholder="مثال: همراه با مکمل امگا-۳">${meal?.note||''}</textarea>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="saveMeal()">${mealId ? 'ذخیره تغییرات' : 'افزودن وعده'}</button>
+  `;
+  openModal();
+}
+
+function saveMeal() {
+  const type = document.getElementById('newMealType').value;
+  const title = document.getElementById('newMealTitle').value.trim();
+  const badge = document.getElementById('newMealBadge').value.trim();
+  const items = document.getElementById('newMealItems').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const cal = parseInt(document.getElementById('newMealCal').value) || 0;
+  const p = parseInt(document.getElementById('newMealP').value) || 0;
+  const c = parseInt(document.getElementById('newMealC').value) || 0;
+  const f = parseInt(document.getElementById('newMealF').value) || 0;
+  const note = document.getElementById('newMealNote').value.trim();
+
+  if (!title || items.length === 0) {
+    showToast('⚠️ عنوان و حداقل یک ماده الزامی است', 'error');
+    return;
+  }
+
+  const mealObj = {
+    id: editingMeal?.id || 'meal-' + Date.now(),
+    title, badge, items, note,
+    macros: { cal, p, c, f }
+  };
+
+  if (editingMeal) {
+    if (editingMeal.type !== type) {
+      meals[editingMeal.type] = meals[editingMeal.type].filter(m => m.id !== editingMeal.id);
+      meals[type].push(mealObj);
+    } else {
+      const idx = meals[type].findIndex(m => m.id === editingMeal.id);
+      if (idx >= 0) meals[type][idx] = mealObj;
+    }
+  } else {
+    meals[type].push(mealObj);
+  }
+
+  saveAll();
+  renderMeals();
+  closeModal();
+  showToast(editingMeal ? '✏️ وعده ویرایش شد' : '✅ وعده اضافه شد');
+  editingMeal = null;
+  checkAchievements();
+}
+
+function editMeal(type, id) {
+  openAddMealModal(type, id);
+}
+
+function deleteMeal(type, id) {
+  confirm_('حذف وعده', 'آیا از حذف این وعده مطمئن هستید؟', () => {
+    meals[type] = meals[type].filter(m => m.id !== id);
+    saveAll();
+    renderMeals();
+    showToast('🗑 وعده حذف شد');
+  });
+}
+
+// ============= SUPPLEMENTS =============
+function renderSupplements() {
+  const sections = { morning: 'suppMorningList', noon: 'suppNoonList', evening: 'suppEveningList', night: 'suppNightList' };
+  const today_ = today();
+  let supData = Storage.get('supp_' + today_, {});
+  let taken = 0, total = 0;
+
+  Object.entries(sections).forEach(([time, containerId]) => {
+    const container = document.getElementById(containerId);
+    const list = supplements.filter(s => s.time === time);
+    if (list.length === 0) {
+      container.innerHTML = `<div class="empty-state" style="padding:16px;"><div class="empty-text" style="font-size:12px;">مکملی برای این زمان ثبت نشده</div></div>`;
+      return;
+    }
+    container.innerHTML = list.map(s => {
+      const isTaken = !!supData[s.id];
+      if (isTaken) taken++;
+      total++;
+      return `
+        <div class="supplement-item ${isTaken ? 'taken' : ''}" data-supp="${s.id}">
+          <div class="supplement-check" onclick="toggleSupp('${s.id}')">✓</div>
+          <div class="supplement-info" onclick="toggleSupp('${s.id}')">
+            <div class="supplement-name">${s.name}</div>
+            <div class="supplement-dose">${s.dose}</div>
+          </div>
+          ${!s.isDefault ? `
+          <div class="supplement-actions">
+            <button class="icon-btn" onclick="editSupp('${s.id}')">✏️</button>
+            <button class="icon-btn" onclick="deleteSupp('${s.id}')">🗑</button>
+          </div>` : ''}
+        </div>`;
+    }).join('');
+  });
+
+  document.getElementById('suppCount').textContent = toPersianNum(taken) + '/' + toPersianNum(total);
+  document.getElementById('suppProgressBar').style.width = (total ? taken / total * 100 : 0) + '%';
+  document.getElementById('suppProgressText').textContent = toPersianNum(taken) + ' از ' + toPersianNum(total);
+}
+
+function toggleSupp(id) {
+  const today_ = today();
+  let supData = Storage.get('supp_' + today_, {});
+  supData[id] = !supData[id];
+  Storage.set('supp_' + today_, supData);
+  if (supData[id]) {
+    showToast('✅ ثبت شد');
+    Storage.set('totalSupps', Storage.get('totalSupps', 0) + 1);
+  }
+  renderSupplements();
+  checkAchievements();
+}
+
+let editingSupp = null;
+function openAddSuppModal(suppId=null) {
+  editingSupp = null;
+  let supp = null;
+  if (suppId) {
+    supp = supplements.find(s => s.id === suppId);
+    if (supp) editingSupp = suppId;
+  }
+  document.getElementById('modalTitle').textContent = suppId ? 'ویرایش مکمل' : 'افزودن مکمل جدید';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">نام دارو یا مکمل</label>
+      <input type="text" class="form-input" id="newSuppName" placeholder="مثال: ویتامین D" value="${supp?.name||''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">دوز و توضیحات</label>
+      <input type="text" class="form-input" id="newSuppDose" placeholder="مثال: ۱۰۰۰ واحد بین‌المللی" value="${supp?.dose||''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">زمان مصرف</label>
+      <select class="form-select" id="newSuppTime">
+        <option value="morning" ${supp?.time==='morning'?'selected':''}>🌅 صبح</option>
+        <option value="noon" ${supp?.time==='noon'?'selected':''}>☀️ ظهر</option>
+        <option value="evening" ${supp?.time==='evening'?'selected':''}>🌆 عصر</option>
+        <option value="night" ${supp?.time==='night'?'selected':''}>🌙 شب</option>
+      </select>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="saveSupp()">${suppId ? 'ذخیره تغییرات' : 'افزودن مکمل'}</button>
+  `;
+  openModal();
+}
+
+function saveSupp() {
+  const name = document.getElementById('newSuppName').value.trim();
+  const dose = document.getElementById('newSuppDose').value.trim();
+  const time = document.getElementById('newSuppTime').value;
+  if (!name) { showToast('⚠️ نام الزامی است'); return; }
+
+  if (editingSupp) {
+    const idx = supplements.findIndex(s => s.id === editingSupp);
+    if (idx >= 0) {
+      supplements[idx] = { ...supplements[idx], name, dose, time };
+    }
+  } else {
+    supplements.push({ id: 'sup-' + Date.now(), name, dose, time });
+  }
+  saveAll();
+  renderSupplements();
+  closeModal();
+  showToast(editingSupp ? '✏️ مکمل ویرایش شد' : '✅ مکمل اضافه شد');
+  editingSupp = null;
+}
+
+function editSupp(id) { openAddSuppModal(id); }
+function deleteSupp(id) {
+  confirm_('حذف مکمل', 'آیا از حذف این مکمل مطمئن هستید؟', () => {
+    supplements = supplements.filter(s => s.id !== id);
+    saveAll();
+    renderSupplements();
+    showToast('🗑 مکمل حذف شد');
+  });
+}
+
+// ============= WALKING =============
+let walkData = Storage.get('walk_' + today(), { minutes: 0, running: false, startTime: null });
+let walkInterval;
+
+function updateWalking() {
+  const minutes = walkData.minutes;
+  const calories = Math.round(minutes * 4.5);
+  document.getElementById('walkMinutes').textContent = toPersianNum(minutes);
+  document.getElementById('walkCalories').textContent = toPersianNum(calories);
+  document.getElementById('walkProgress').textContent = toPersianNum(minutes);
+  document.getElementById('walkGoal').textContent = toPersianNum(settings.walkingGoal);
+
+  let displayMin = minutes, displaySec = 0;
+  if (walkData.running && walkData.startTime) {
+    const elapsed = Math.floor((Date.now() - walkData.startTime) / 1000);
+    displayMin = minutes + Math.floor(elapsed / 60);
+    displaySec = elapsed % 60;
+  }
+  document.getElementById('walkTimer').textContent = toPersianNum(String(displayMin).padStart(2,'0') + ':' + String(displaySec).padStart(2,'0'));
+}
+
+document.getElementById('startWalkBtn').addEventListener('click', () => {
+  if (!walkData.running) {
+    walkData.running = true;
+    walkData.startTime = Date.now();
+    Storage.set('walk_' + today(), walkData);
+    walkInterval = setInterval(updateWalking, 1000);
+    showToast('🚶 پیاده‌روی شروع شد');
+  }
+});
+document.getElementById('stopWalkBtn').addEventListener('click', () => {
+  if (walkData.running) {
+    const elapsed = Math.floor((Date.now() - walkData.startTime) / 1000 / 60);
+    walkData.minutes += elapsed;
+    walkData.running = false;
+    walkData.startTime = null;
+    Storage.set('walk_' + today(), walkData);
+    clearInterval(walkInterval);
+    updateWalking();
+    saveWalkHistory();
+    drawWalkChart();
+    if (walkData.minutes >= settings.walkingGoal) {
+      showToast('🎉 هدف روزانه محقق شد!');
+      checkAchievements();
+    } else {
+      showToast('پیاده‌روی متوقف شد');
+    }
+  }
+});
+document.getElementById('addWalkBtn').addEventListener('click', () => {
+  document.getElementById('modalTitle').textContent = 'افزودن دستی پیاده‌روی';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">مدت زمان (دقیقه)</label>
+      <input type="number" class="form-input" id="manualWalk" placeholder="مثال: ۲۵" min="1" max="300">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="addManualWalk()">افزودن</button>
+  `;
+  openModal();
+});
+
+function addManualWalk() {
+  const min = parseInt(document.getElementById('manualWalk').value);
+  if (!min || min <= 0) { showToast('⚠️ مقدار نامعتبر'); return; }
+  walkData.minutes += min;
+  Storage.set('walk_' + today(), walkData);
+  updateWalking();
+  saveWalkHistory();
+  drawWalkChart();
+  closeModal();
+  showToast(`✅ ${toPersianNum(min)} دقیقه اضافه شد`);
+  checkAchievements();
+}
+
+function saveWalkHistory() {
+  const history = Storage.get('walkHistory', {});
+  history[dateKey()] = walkData.minutes;
+  Storage.set('walkHistory', history);
+}
+
+function drawWalkChart() {
+  const history = Storage.get('walkHistory', {});
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push({ key: dateKey(d), label: ['ش','ی','د','س','چ','پ','ج'][d.getDay()] });
+  }
+  const values = days.map(d => history[d.key] || 0);
+  const max = Math.max(settings.walkingGoal, ...values) * 1.2;
+  drawLineChart('walkChart', days.map(d => d.label), values, max, 'دقیقه');
+}
+
+function drawLineChart(containerId, labels, values, maxVal, unit) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const w = 600, h = 180, pad = 30;
+  const max = maxVal || Math.max(1, ...values);
+  let path = '', area = `M ${pad} ${h - pad} `;
+  const xStep = (w - pad * 2) / (values.length - 1 || 1);
+  values.forEach((v, i) => {
+    const x = pad + i * xStep;
+    const y = h - pad - ((v / max) * (h - pad * 2));
+    path += (i === 0 ? 'M' : 'L') + ' ' + x + ' ' + y + ' ';
+    area += `L ${x} ${y} `;
+  });
+  area += `L ${pad + (values.length - 1) * xStep} ${h - pad} Z`;
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <defs><linearGradient id="chartGrad" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#14b8a6" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+    </linearGradient></defs>
+    <g class="chart-grid">
+      <line x1="${pad}" y1="${pad}" x2="${w-pad}" y2="${pad}"/>
+      <line x1="${pad}" y1="${h/2}" x2="${w-pad}" y2="${h/2}"/>
+      <line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}"/>
+    </g>
+    <path class="chart-area" d="${area}"/>
+    <path class="chart-line" d="${path}"/>`;
+  values.forEach((v, i) => {
+    const x = pad + i * xStep;
+    const y = h - pad - ((v / max) * (h - pad * 2));
+    svg += `<circle class="chart-point" cx="${x}" cy="${y}" r="5"/>`;
+    svg += `<text class="chart-label" x="${x}" y="${h - 8}" text-anchor="middle">${labels[i]}</text>`;
+    if (v > 0) svg += `<text class="chart-label" x="${x}" y="${y - 10}" text-anchor="middle" style="fill:#e2e8f0;">${toPersianNum(v)}</text>`;
+  });
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+if (walkData.running && walkData.startTime) walkInterval = setInterval(updateWalking, 1000);
+
+// ============= TRACKERS =============
+function openTracker(type) {
+  switch(type) {
+    case 'water': openWaterTracker(); break;
+    case 'weight': openWeightTracker(); break;
+    case 'sleep': openSleepTracker(); break;
+    case 'mood': openMoodTracker(); break;
+  }
+}
+
+// Water
+function openWaterTracker() {
+  const today_ = today();
+  const water = Storage.get('water_' + today_, 0);
+  const goal = settings.waterGoal;
+  document.getElementById('modalTitle').textContent = '💧 ردیاب آب روزانه';
+  let cups = '';
+  for (let i = 0; i < goal; i++) {
+    cups += `<div class="water-cup ${i < water ? 'filled' : ''}" onclick="toggleWater(${i})">${i < water ? '💧' : '🥤'}</div>`;
+  }
+  document.getElementById('modalBody').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:48px;font-weight:700;color:var(--info);">${toPersianNum(water)}<span style="font-size:18px;color:var(--text-muted);"> / ${toPersianNum(goal)}</span></div>
+      <div style="font-size:13px;color:var(--text-muted);">لیوان آب امروز</div>
+    </div>
+    <div class="water-grid" id="waterGrid">${cups}</div>
+    <div class="info-note">
+      <strong>توصیه:</strong> روزانه ${toPersianNum(goal)} لیوان (تقریباً ${toPersianNum(goal*250)} میلی‌لیتر) آب بنوشید. آب کافی به چربی‌سوزی و عملکرد مغز کمک می‌کند.
+    </div>
+  `;
+  openModal();
+}
+
+function toggleWater(idx) {
+  const today_ = today();
+  let water = Storage.get('water_' + today_, 0);
+  water = idx < water ? idx : idx + 1;
+  Storage.set('water_' + today_, water);
+  updateWaterDisplay();
+  openWaterTracker();
+  if (water === settings.waterGoal) showToast('🎉 هدف آب امروز محقق شد!');
+}
+
+function updateWaterDisplay() {
+  const water = Storage.get('water_' + today(), 0);
+  document.getElementById('waterCount').textContent = toPersianNum(water) + '/' + toPersianNum(settings.waterGoal);
+}
+
+// Weight
+function openWeightTracker() {
+  const history = Storage.get('weightHistory', {});
+  const entries = Object.entries(history).sort();
+  const current = entries.length ? entries[entries.length-1][1] : null;
+  const first = entries.length ? entries[0][1] : null;
+  const change = current && first ? (current - first).toFixed(1) : 0;
+
+  document.getElementById('modalTitle').textContent = '⚖️ ردیاب وزن';
+  let chartHtml = '';
+  if (entries.length >= 2) {
+    chartHtml = `<div class="card" style="margin:16px 0;"><div class="card-title"><div class="icon">📈</div>روند تغییرات</div><div class="chart-container" id="weightChart"></div></div>`;
+  }
+  document.getElementById('modalBody').innerHTML = `
+    <div style="text-align:center;margin-bottom:20px;">
+      <div class="weight-display">${current ? toPersianNum(current) : '—'}<span class="weight-unit"> kg</span></div>
+      ${entries.length > 1 ? `<div class="weight-change ${change < 0 ? 'down' : change > 0 ? 'up' : 'same'}">${change > 0 ? '+' : ''}${toPersianNum(change)} کیلو</div>` : ''}
+    </div>
+    <div class="form-group">
+      <label class="form-label">ثبت وزن امروز (kg)</label>
+      <input type="number" step="0.1" class="form-input" id="newWeight" placeholder="مثال: ۷۵.۵" value="${current||''}">
+    </div>
+    <button class="btn btn-primary btn-full" onclick="saveWeight()">ذخیره وزن</button>
+    ${chartHtml}
+    ${entries.length > 0 ? `<div style="margin-top:16px;"><div class="settings-divider">تاریخچه</div>${entries.slice(-5).reverse().map(([d,w]) => `<div class="settings-item"><span class="settings-label">${formatDate(d)}</span><span class="settings-value">${toPersianNum(w)} kg</span></div>`).join('')}</div>` : ''}
+  `;
+  openModal();
+  setTimeout(() => {
+    if (entries.length >= 2) {
+      const labels = entries.slice(-7).map(([d]) => d.split('-')[2]);
+      const values = entries.slice(-7).map(([,v]) => parseFloat(v));
+      const minV = Math.min(...values);
+      const maxV = Math.max(...values);
+      drawLineChart('weightChart', labels, values, maxV + (maxV - minV) * 0.2 || maxV * 1.1, 'kg');
+    }
+  }, 100);
+}
+
+function saveWeight() {
+  const v = parseFloat(document.getElementById('newWeight').value);
+  if (!v || v < 20 || v > 300) { showToast('⚠️ وزن نامعتبر'); return; }
+  const history = Storage.get('weightHistory', {});
+  history[dateKey()] = v;
+  Storage.set('weightHistory', history);
+  updateWeightDisplay();
+  showToast('⚖️ وزن ثبت شد');
+  openWeightTracker();
+}
+
+function updateWeightDisplay() {
+  const history = Storage.get('weightHistory', {});
+  const entries = Object.entries(history).sort();
+  const el = document.getElementById('weightDisplay');
+  if (el) el.textContent = entries.length ? toPersianNum(entries[entries.length-1][1]) : '—';
+}
+
+// Sleep
+function openSleepTracker() {
+  const today_ = today();
+  const sleep = Storage.get('sleep_' + today_, { hours: 0, quality: 0 });
+  document.getElementById('modalTitle').textContent = '😴 ردیاب خواب';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">ساعات خواب دیشب</label>
+      <input type="number" step="0.5" class="form-input" id="sleepHours" placeholder="مثال: ۷.۵" min="0" max="24" value="${sleep.hours||''}">
+    </div>
+    <div class="form-group">
+      <label class="form-label">کیفیت خواب</label>
+      <div class="sleep-stars" id="sleepStars">
+        ${[1,2,3,4,5].map(n => `<span class="sleep-star ${n <= sleep.quality ? 'active' : ''}" onclick="setSleepQuality(${n})">★</span>`).join('')}
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="saveSleep()">ذخیره</button>
+    <div class="info-note">
+      <strong>توصیه:</strong> خواب کافی (۷-۹ ساعت) برای ترشح هورمون رشد، چربی‌سوزی شبانه و بازسازی مغز ضروری است.
+    </div>
+  `;
+  openModal();
+}
+
+let currentSleepQuality = 0;
+function setSleepQuality(n) {
+  currentSleepQuality = n;
+  document.querySelectorAll('#sleepStars .sleep-star').forEach((s, i) => {
+    s.classList.toggle('active', i < n);
+  });
+}
+
+function saveSleep() {
+  const hours = parseFloat(document.getElementById('sleepHours').value) || 0;
+  Storage.set('sleep_' + today(), { hours, quality: currentSleepQuality });
+  showToast('😴 خواب ثبت شد');
+  closeModal();
+}
+
+// Mood
+function openMoodTracker() {
+  const today_ = today();
+  const mood = Storage.get('mood_' + today_, { value: 0, energy: 0 });
+  document.getElementById('modalTitle').textContent = '😊 حس و انرژی امروز';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">حال عمومی</label>
+      <div class="mood-grid">
+        ${[
+          {v:1,e:'😞',l:'خیلی بد'},
+          {v:2,e:'😕',l:'بد'},
+          {v:3,e:'😐',l:'معمولی'},
+          {v:4,e:'🙂',l:'خوب'},
+          {v:5,e:'😄',l:'عالی'}
+        ].map(m => `<div class="mood-option ${mood.value===m.v?'selected':''}" data-mood="${m.v}" onclick="selectMood(${m.v})"><div class="mood-emoji">${m.e}</div><div class="mood-label">${m.l}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">سطح انرژی</label>
+      <div class="mood-grid">
+        ${[
+          {v:1,e:'🔋',l:'خالی'},
+          {v:2,e:'🔋',l:'کم'},
+          {v:3,e:'🔋',l:'متوسط'},
+          {v:4,e:'🔋',l:'خوب'},
+          {v:5,e:'⚡',l:'بالا'}
+        ].map(m => `<div class="mood-option ${mood.energy===m.v?'selected':''}" data-energy="${m.v}" onclick="selectEnergy(${m.v})"><div class="mood-emoji">${m.e}</div><div class="mood-label">${m.l}</div></div>`).join('')}
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="saveMood()">ذخیره</button>
+  `;
+  openModal();
+}
+
+let currentMood = 0, currentEnergy = 0;
+function selectMood(v) {
+  currentMood = v;
+  document.querySelectorAll('[data-mood]').forEach(el => el.classList.toggle('selected', parseInt(el.dataset.mood) === v));
+}
+function selectEnergy(v) {
+  currentEnergy = v;
+  document.querySelectorAll('[data-energy]').forEach(el => el.classList.toggle('selected', parseInt(el.dataset.energy) === v));
+}
+function saveMood() {
+  Storage.set('mood_' + today(), { value: currentMood, energy: currentEnergy });
+  showToast('😊 ثبت شد');
+  closeModal();
+}
+
+// ============= NOTES =============
+function openNotes() {
+  const notes = Storage.get('notes', []);
+  document.getElementById('modalTitle').textContent = '📝 یادداشت‌های روزانه';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">یادداشت جدید</label>
+      <textarea class="form-textarea" id="noteText" placeholder="احساسات، تجربیات یا نکات امروز..." rows="4"></textarea>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="saveNote()">+ افزودن یادداشت</button>
+    <div style="margin-top:20px;">
+      <div class="settings-divider">یادداشت‌های قبلی (${toPersianNum(notes.length)})</div>
+      ${notes.length === 0 ? '<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">هنوز یادداشتی ندارید</div></div>' :
+        notes.slice().reverse().map(n => `
+          <div class="note-item">
+            <div class="note-date">${formatDateTime(n.date)} <span style="float:left;cursor:pointer;color:var(--danger);" onclick="deleteNote(${n.id})">حذف</span></div>
+            <div class="note-text">${escapeHtml(n.text)}</div>
+          </div>`).join('')
+      }
+    </div>
+  `;
+  openModal();
+}
+
+function saveNote() {
+  const text = document.getElementById('noteText').value.trim();
+  if (!text) { showToast('⚠️ یادداشت خالی است'); return; }
+  const notes = Storage.get('notes', []);
+  notes.push({ id: Date.now(), date: new Date().toISOString(), text });
+  Storage.set('notes', notes);
+  showToast('📝 یادداشت ذخیره شد');
+  openNotes();
+}
+
+function deleteNote(id) {
+  let notes = Storage.get('notes', []);
+  notes = notes.filter(n => n.id !== id);
+  Storage.set('notes', notes);
+  openNotes();
+}
+
+// ============= CHARTS =============
+function openCharts() {
+  document.getElementById('modalTitle').textContent = '📊 نمودارهای پیشرفت';
+
+  const walkHistory = Storage.get('walkHistory', {});
+  const weightHistory = Storage.get('weightHistory', {});
+  const waterDays = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    waterDays.push({ key: dateKey(d), label: ['ش','ی','د','س','چ','پ','ج'][d.getDay()], val: Storage.get('water_' + d.toDateString(), 0) });
+  }
+
+  document.getElementById('modalBody').innerHTML = `
+    <div class="card">
+      <div class="card-title"><div class="icon">🚶</div>پیاده‌روی ۷ روز اخیر</div>
+      <div class="chart-container" id="chartWalk"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><div class="icon">💧</div>مصرف آب ۷ روز اخیر</div>
+      <div class="chart-container" id="chartWater"></div>
+    </div>
+    ${Object.keys(weightHistory).length >= 2 ? `
+    <div class="card">
+      <div class="card-title"><div class="icon">⚖️</div>روند وزن</div>
+      <div class="chart-container" id="chartWeight"></div>
+    </div>` : ''}
+  `;
+  openModal();
+  setTimeout(() => {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      days.push({ key: dateKey(d), label: ['ش','ی','د','س','چ','پ','ج'][d.getDay()] });
+    }
+    drawLineChart('chartWalk', days.map(d=>d.label), days.map(d => walkHistory[d.key]||0), settings.walkingGoal * 1.5);
+    drawLineChart('chartWater', waterDays.map(d=>d.label), waterDays.map(d=>d.val), settings.waterGoal * 1.2);
+    if (Object.keys(weightHistory).length >= 2) {
+      const entries = Object.entries(weightHistory).sort().slice(-7);
+      const labels = entries.map(([d]) => d.split('-')[2]);
+      const values = entries.map(([,v]) => parseFloat(v));
+      drawLineChart('chartWeight', labels, values, Math.max(...values) * 1.05);
+    }
+  }, 100);
+}
+
+// ============= ACHIEVEMENTS =============
+const ACHIEVEMENTS = [
+  { id: 'first_fast', icon: '🌱', name: 'اولین قدم', desc: 'اولین روزه کامل', check: () => Storage.get('totalFasts', 0) >= 1 },
+  { id: 'fast_10', icon: '🔥', name: '۱۰ روزه', desc: '۱۰ روزه کامل', check: () => Storage.get('totalFasts', 0) >= 10 },
+  { id: 'fast_30', icon: '⭐', name: '۳۰ روزه', desc: '۳۰ روزه کامل', check: () => Storage.get('totalFasts', 0) >= 30 },
+  { id: 'walk_30', icon: '🚶', name: 'پیاده‌رو', desc: 'یک روز ۳۰ دقیقه', check: () => {
+    const h = Storage.get('walkHistory', {});
+    return Object.values(h).some(v => v >= settings.walkingGoal);
+  }},
+  { id: 'walk_week', icon: '🏃', name: 'هفته فعال', desc: '۷ روز پیاده‌روی', check: () => {
+    return Object.keys(Storage.get('walkHistory', {})).length >= 7;
+  }},
+  { id: 'custom_meal', icon: '👨‍🍳', name: 'آشپز شخصی', desc: 'افزودن وعده دلخواه', check: () => {
+    return Object.values(meals).some(arr => arr.some(m => !m.isDefault));
+  }},
+  { id: 'supp_complete', icon: '💊', name: 'منظم', desc: 'تمام مکمل‌های یک روز', check: () => Storage.get('totalSupps', 0) >= supplements.length }
+];
+
+function checkAchievements() {
+  const unlocked = Storage.get('achievements', []);
+  ACHIEVEMENTS.forEach(a => {
+    if (!unlocked.includes(a.id) && a.check()) {
+      unlocked.push(a.id);
+      Storage.set('achievements', unlocked);
+      setTimeout(() => showToast(`🏆 دستاورد جدید: ${a.name}`), 500);
+    }
+  });
+}
+
+function openAchievements() {
+  const unlocked = Storage.get('achievements', []);
+  document.getElementById('modalTitle').textContent = '🏆 دستاوردها';
+  document.getElementById('modalBody').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:32px;font-weight:700;">${toPersianNum(unlocked.length)}<span style="font-size:16px;color:var(--text-muted);"> / ${toPersianNum(ACHIEVEMENTS.length)}</span></div>
+      <div style="font-size:13px;color:var(--text-muted);">دستاوردهای کسب شده</div>
+    </div>
+    <div class="achievement-grid">
+      ${ACHIEVEMENTS.map(a => `
+        <div class="achievement-item ${unlocked.includes(a.id) ? 'unlocked' : ''}">
+          <div class="achievement-icon">${unlocked.includes(a.id) ? a.icon : '🔒'}</div>
+          <div class="achievement-name">${a.name}</div>
+          <div class="achievement-desc">${a.desc}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  openModal();
+}
+
+// ============= SETTINGS =============
+function openSettings() {
+  document.getElementById('modalTitle').textContent = '⚙️ تنظیمات';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="settings-divider">شخصی‌سازی</div>
+    <div class="settings-item" onclick="editSetting('userName','نام شما','text')">
+      <span class="settings-label">نام کاربری</span>
+      <span class="settings-value">${settings.userName}</span>
+    </div>
+
+    <div class="settings-divider">اهداف تغذیه‌ای</div>
+    <div class="settings-item" onclick="editSetting('calorieTarget','کالری هدف','number')">
+      <span class="settings-label">کالری هدف</span>
+      <span class="settings-value">${toPersianNum(settings.calorieTarget)} kcal</span>
+    </div>
+    <div class="settings-item" onclick="editSetting('proteinTarget','پروتئین (گرم)','number')">
+      <span class="settings-label">پروتئین</span>
+      <span class="settings-value">${toPersianNum(settings.proteinTarget)} g</span>
+    </div>
+    <div class="settings-item" onclick="editSetting('carbsTarget','کربوهیدرات (گرم)','number')">
+      <span class="settings-label">کربوهیدرات</span>
+      <span class="settings-value">${toPersianNum(settings.carbsTarget)} g</span>
+    </div>
+    <div class="settings-item" onclick="editSetting('fatTarget','چربی (گرم)','number')">
+      <span class="settings-label">چربی</span>
+      <span class="settings-value">${toPersianNum(settings.fatTarget)} g</span>
+    </div>
+
+    <div class="settings-divider">روزه و ورزش</div>
+    <div class="settings-item" onclick="editSetting('fastingHours','ساعات روزه‌داری','number')">
+      <span class="settings-label">مدت روزه (ساعت)</span>
+      <span class="settings-value">${toPersianNum(settings.fastingHours)}</span>
+    </div>
+    <div class="settings-item" onclick="editSetting('walkingGoal','هدف پیاده‌روی (دقیقه)','number')">
+      <span class="settings-label">پیاده‌روی روزانه</span>
+      <span class="settings-value">${toPersianNum(settings.walkingGoal)} دقیقه</span>
+    </div>
+    <div class="settings-item" onclick="editSetting('waterGoal','هدف آب (لیوان)','number')">
+      <span class="settings-label">آب روزانه</span>
+      <span class="settings-value">${toPersianNum(settings.waterGoal)} لیوان</span>
+    </div>
+
+    <div class="settings-divider">اعلان‌ها</div>
+    <div class="settings-item">
+      <span class="settings-label">یادآور مکمل‌ها</span>
+      <label class="switch"><input type="checkbox" id="notifSwitch" ${settings.notifications ? 'checked' : ''}><span class="slider"></span></label>
+    </div>
+
+    <div class="settings-divider">داده‌ها</div>
+    <div class="settings-item" onclick="exportData()">
+      <span class="settings-label">📥 خروجی گرفتن از داده‌ها</span>
+      <span class="settings-value">JSON</span>
+    </div>
+    <div class="settings-item" onclick="importData()">
+      <span class="settings-label">📤 بازیابی از فایل</span>
+      <span class="settings-value">JSON</span>
+    </div>
+    <div class="settings-item" onclick="resetAll()" style="color:var(--danger);">
+      <span class="settings-label">🗑 پاک کردن همه داده‌ها</span>
+    </div>
+  `;
+
+  document.getElementById('notifSwitch')?.addEventListener('change', async (e) => {
+    if (e.target.checked) {
+      if ('Notification' in window) {
+        const perm = await Notification.requestPermission();
+        settings.notifications = perm === 'granted';
+        if (!settings.notifications) e.target.checked = false;
+      } else {
+        e.target.checked = false;
+      }
+    } else {
+      settings.notifications = false;
+    }
+    saveAll();
+  });
+
+  openModal();
+}
+
+function editSetting(key, label, type) {
+  document.getElementById('modalTitle').textContent = label;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">${label}</label>
+      <input type="${type}" class="form-input" id="settingInput" value="${settings[key]}">
+    </div>
+    <div class="form-row">
+      <button class="btn btn-dark" onclick="openSettings()">لغو</button>
+      <button class="btn btn-primary" onclick="saveSetting('${key}','${type}')">ذخیره</button>
+    </div>
+  `;
+}
+
+function saveSetting(key, type) {
+  const val = document.getElementById('settingInput').value;
+  settings[key] = type === 'number' ? parseFloat(val) : val;
+  saveAll();
+  applySettings();
+  showToast('✅ ذخیره شد');
+  openSettings();
+}
+
+function applySettings() {
+  document.getElementById('appTitle').textContent = `برنامه ${settings.userName}`;
+  document.getElementById('userAvatar').textContent = settings.userName.charAt(0);
+  document.getElementById('dispCalories').textContent = toPersianNum(settings.calorieTarget);
+  document.getElementById('dispProtein').textContent = toPersianNum(settings.proteinTarget);
+  document.getElementById('dispCarbs').textContent = toPersianNum(settings.carbsTarget);
+  document.getElementById('dispFat').textContent = toPersianNum(settings.fatTarget);
+  updateFasting();
+  updateWalking();
+  updateWaterDisplay();
+}
+
+function exportData() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    data[k] = localStorage.getItem(k);
+  }
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `health-backup-${dateKey()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📥 فایل دانلود شد');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        confirm_('بازیابی داده‌ها', 'تمام داده‌های فعلی جایگزین می‌شوند. ادامه می‌دهید؟', () => {
+          localStorage.clear();
+          Object.entries(data).forEach(([k,v]) => localStorage.setItem(k, v));
+          showToast('✅ داده‌ها بازیابی شد');
+          setTimeout(() => location.reload(), 1000);
+        });
+      } catch {
+        showToast('⚠️ فایل نامعتبر است');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function resetAll() {
+  confirm_('پاک کردن همه داده‌ها', 'تمام اطلاعات، تنظیمات، وعده‌ها و سوابق پاک می‌شود. این عملیات قابل بازگشت نیست.', () => {
+    localStorage.clear();
+    showToast('🗑 تمام داده‌ها پاک شد');
+    setTimeout(() => location.reload(), 1000);
+  });
+}
+
+// ============= MODAL =============
+function openModal() { document.getElementById('modalOverlay').classList.add('show'); }
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+  editingMeal = null;
+  editingSupp = null;
+}
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target.id === 'modalOverlay') closeModal();
+});
+
+let confirmCallback = null;
+function confirm_(title, text, cb) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmText').textContent = text;
+  confirmCallback = cb;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('show'); confirmCallback = null; }
+document.getElementById('confirmYes').addEventListener('click', () => {
+  if (confirmCallback) confirmCallback();
+  closeConfirm();
+});
+
+// ============= TOAST =============
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ============= UTILS =============
+function formatDate(isoDate) {
+  const [y,m,d] = isoDate.split('-');
+  return toPersianNum(`${d}/${m}/${y}`);
+}
+function formatDateTime(iso) {
+  const d = new Date(iso);
+  return toPersianNum(d.toLocaleDateString('fa-IR') + ' - ' + d.toLocaleTimeString('fa-IR', {hour:'2-digit',minute:'2-digit'}));
+}
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+// ============= PWA =============
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (!Storage.get('installDismissed')) document.getElementById('installPrompt').classList.add('show');
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') showToast('✅ اپلیکیشن نصب شد!');
+    deferredPrompt = null;
+    document.getElementById('installPrompt').classList.remove('show');
+  }
+});
+document.getElementById('closeInstallBtn').addEventListener('click', () => {
+  document.getElementById('installPrompt').classList.remove('show');
+  Storage.set('installDismissed', true);
+});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+}
+
+// ============= NOTIFICATIONS =============
+function scheduleNotifications() {
+  if (!settings.notifications || !('Notification' in window) || Notification.permission !== 'granted') return;
+  // Simple in-session reminder check every 5 mins
+  setInterval(() => {
+    const now = new Date();
+    const h = now.getHours(), m = now.getMinutes();
+    const today_ = today();
+    const supData = Storage.get('supp_' + today_, {});
+    const sentToday = Storage.get('notifSent_' + today_, []);
+
+    const checkTime = (targetH, time, label) => {
+      if (h === targetH && m < 5 && !sentToday.includes(time)) {
+        const pending = supplements.filter(s => s.time === time && !supData[s.id]);
+        if (pending.length > 0) {
+          new Notification('یادآور مکمل‌های ' + label, { body: pending.map(s=>s.name).join('، '), icon: 'icon-192.png' });
+          sentToday.push(time);
+          Storage.set('notifSent_' + today_, sentToday);
+        }
+      }
+    };
+    checkTime(7, 'morning', 'صبح');
+    checkTime(13, 'noon', 'ظهر');
+    checkTime(17, 'evening', 'عصر');
+    checkTime(22, 'night', 'شب');
+  }, 5 * 60 * 1000);
+}
+
+// ============= MOBILE FEATURES =============
+
+// Haptic feedback for supported devices
+function haptic(type='light') {
+  if ('vibrate' in navigator) {
+    const patterns = { light: 10, medium: 25, heavy: 50, success: [10, 50, 10], error: [30, 30, 30] };
+    navigator.vibrate(patterns[type] || 10);
+  }
+}
+
+// Add haptic to all buttons
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.btn, .icon-btn, .tab-item, .meal-tab, .supplement-check, .water-cup, .mood-option, .more-item, .fab, .stat-card')) {
+    haptic('light');
+  }
+}, true);
+
+// iOS detection and install banner
+function isIOS() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+
+function showIOSBanner() {
+  if (isIOS() && !isStandalone() && !Storage.get('iosDismissed')) {
+    setTimeout(() => {
+      document.getElementById('iosBanner').classList.add('show');
+    }, 2000);
+  }
+}
+
+document.getElementById('iosCloseBtn').addEventListener('click', () => {
+  document.getElementById('iosBanner').classList.remove('show');
+  Storage.set('iosDismissed', true);
+});
+
+// Swipe between tabs
+const tabOrder = ['dashboard', 'meals', 'supplements', 'walking', 'more'];
+let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0;
+
+document.addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+  touchStartY = e.changedTouches[0].screenY;
+}, { passive: true });
+
+document.addEventListener('touchend', (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  touchEndY = e.changedTouches[0].screenY;
+  handleSwipe();
+}, { passive: true });
+
+function handleSwipe() {
+  const dx = touchEndX - touchStartX;
+  const dy = touchEndY - touchStartY;
+  // Only horizontal swipes, not on modals
+  if (Math.abs(dy) > Math.abs(dx)) return;
+  if (Math.abs(dx) < 80) return;
+  if (document.getElementById('modalOverlay').classList.contains('show')) return;
+  if (document.getElementById('confirmOverlay').classList.contains('show')) return;
+
+  const currentActive = document.querySelector('.tab-item.active')?.dataset.tab;
+  const currentIdx = tabOrder.indexOf(currentActive);
+  if (currentIdx === -1) return;
+
+  // RTL: swipe right (positive dx) = previous tab, swipe left = next tab
+  let newIdx;
+  if (dx > 0) newIdx = currentIdx - 1; // swipe right → previous
+  else newIdx = currentIdx + 1; // swipe left → next
+
+  if (newIdx >= 0 && newIdx < tabOrder.length) {
+    switchTab(tabOrder[newIdx]);
+    haptic('light');
+  }
+}
+
+// Pull to refresh
+let pullStartY = 0;
+let pulling = false;
+const pullIndicator = document.getElementById('pullIndicator');
+
+document.addEventListener('touchstart', (e) => {
+  if (window.scrollY === 0) {
+    pullStartY = e.touches[0].screenY;
+    pulling = true;
+  }
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+  if (!pulling) return;
+  const delta = e.touches[0].screenY - pullStartY;
+  if (delta > 80) {
+    pullIndicator.classList.add('show');
+    pullIndicator.textContent = '↑ رها کنید برای بروزرسانی';
+  } else if (delta > 20) {
+    pullIndicator.classList.add('show');
+    pullIndicator.textContent = '↓ برای بروزرسانی بکشید';
+  } else {
+    pullIndicator.classList.remove('show');
+  }
+}, { passive: true });
+
+document.addEventListener('touchend', (e) => {
+  if (!pulling) return;
+  const delta = e.changedTouches[0].screenY - pullStartY;
+  if (delta > 80) {
+    pullIndicator.textContent = '↻ در حال بروزرسانی...';
+    haptic('medium');
+    setTimeout(() => {
+      pullIndicator.classList.remove('show');
+      renderMeals();
+      renderSupplements();
+      updateFasting();
+      updateWalking();
+      updateWaterDisplay();
+      updateWeightDisplay();
+      showToast('✅ بروزرسانی شد');
+    }, 600);
+  } else {
+    pullIndicator.classList.remove('show');
+  }
+  pulling = false;
+}, { passive: true });
+
+// Lock screen orientation hint
+if (screen.orientation && screen.orientation.lock) {
+  screen.orientation.lock('portrait').catch(() => {});
+}
+
+// Wake lock for fasting timer
+let wakeLock = null;
+async function requestWakeLock() {
+  if ('wakeLock' in navigator) {
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch {}
+  }
+}
+
+// Add haptic to supplement check
+const origToggleSupp = toggleSupp;
+toggleSupp = function(id) {
+  haptic('medium');
+  origToggleSupp(id);
+};
+
+// Online/offline status
+window.addEventListener('online', () => showToast('🌐 آنلاین شدید'));
+window.addEventListener('offline', () => showToast('📡 آفلاین (داده‌ها حفظ می‌شوند)'));
+
+// Prevent double-tap zoom on iOS
+let lastTouch = 0;
+document.addEventListener('touchend', (e) => {
+  const now = Date.now();
+  if (now - lastTouch < 300) e.preventDefault();
+  lastTouch = now;
+}, { passive: false });
+
+// ============= INIT =============
+function init() {
+  applySettings();
+  renderMeals();
+  renderSupplements();
+  updateFasting();
+  updateWalking();
+  updateWaterDisplay();
+  updateWeightDisplay();
+  saveWalkHistory();
+  setTimeout(drawWalkChart, 100);
+
+  // Streak tracking
+  let streak = Storage.get('streak', 1);
+  let lastVisit = Storage.get('lastVisit');
+  const today_ = today();
+  if (lastVisit !== today_) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (lastVisit === yesterday) streak++;
+    else if (lastVisit) streak = 1;
+    Storage.set('streak', streak);
+    Storage.set('lastVisit', today_);
+  }
+
+  scheduleNotifications();
+  checkAchievements();
+  showIOSBanner();
+  requestWakeLock();
+}
+
+init();
+</script>
+</body>
+</html>

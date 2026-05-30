@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f766e">
+<title>نصب اپلیکیشن سلامتی</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --primary: #0f766e;
+  --primary-light: #14b8a6;
+  --accent: #f59e0b;
+  --bg: #0a0f1c;
+  --card: #131a2c;
+  --card-light: #1c2440;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: rgba(148, 163, 184, 0.1);
+}
+
+body {
+  font-family: 'Vazirmatn', sans-serif;
+  background: linear-gradient(180deg, #0a0f1c 0%, #131a2c 100%);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  padding: 24px 0 32px;
+}
+
+.app-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+  box-shadow: 0 20px 50px rgba(20, 184, 166, 0.4);
+  position: relative;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.app-icon::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(135deg, var(--accent), var(--primary-light));
+  border-radius: 26px;
+  z-index: -1;
+  opacity: 0.5;
+  filter: blur(20px);
+}
+
+.app-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--primary-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.feature-pill {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 12px 8px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.feature-pill .icon { font-size: 24px; margin-bottom: 4px; }
+.feature-pill .label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+
+/* Platform tabs */
+.platform-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--card);
+  padding: 4px;
+  border-radius: 14px;
+  margin: 20px 0 16px;
+  border: 1px solid var(--border);
+}
+
+.platform-tab {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.platform-tab.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Install card */
+.install-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.install-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.install-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+/* Steps */
+.steps {
+  list-style: none;
+  counter-reset: step;
+}
+
+.step {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  position: relative;
+  align-items: flex-start;
+}
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 16px;
+  top: 36px;
+  bottom: -18px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--primary-light), transparent);
+}
+
+.step-number {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.step-content { flex: 1; padding-top: 4px; }
+
+.step-text {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.step-text strong {
+  color: var(--primary-light);
+}
+
+.step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-light);
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 4px 4px 0 0;
+  gap: 4px;
+  border: 1px solid var(--border);
+}
+
+/* Open button */
+.cta-button {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 16px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 16px 0;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(20, 184, 166, 0.3);
+}
+
+.cta-button:active { transform: scale(0.98); }
+
+/* QR Card */
+.qr-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.qr-wrap {
+  background: white;
+  display: inline-block;
+  padding: 12px;
+  border-radius: 16px;
+  margin: 12px 0;
+}
+
+#qrcode {
+  width: 180px;
+  height: 180px;
+}
+
+.qr-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+/* Info note */
+.note {
+  background: rgba(20, 184, 166, 0.08);
+  border-right: 3px solid var(--primary-light);
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--text);
+  line-height: 1.7;
+  margin-top: 16px;
+}
+
+.note strong { color: var(--primary-light); }
+.note.warning {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: var(--accent);
+}
+.note.warning strong { color: var(--accent); }
+
+/* Visual share icon */
+.visual-demo {
+  background: var(--card-light);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.visual-demo .demo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--card);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+/* Stats */
+.stats-bar {
+  display: flex;
+  justify-content: space-around;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat .num {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary-light);
+}
+
+.stat .lbl {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.divider {
+  width: 1px;
+  background: var(--border);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.section-hidden { display: none; }
+
+/* Pulse animation for arrow */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.arrow-down {
+  text-align: center;
+  font-size: 24px;
+  margin: 10px 0;
+  animation: pulse 2s ease-in-out infinite;
+  color: var(--primary-light);
+}
+
+/* Already installed banner */
+.installed-banner {
+  background: linear-gradient(135deg, var(--success, #10b981), var(--primary-light));
+  color: white;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.installed-banner.show { display: block; }
+
+@media (max-width: 380px) {
+  .app-title { font-size: 22px; }
+  .features-grid { gap: 6px; }
+  .feature-pill .icon { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="app-icon">💚</div>
+    <h1 class="app-title">سلامتی من</h1>
+    <p class="app-subtitle">برنامه جامع کاهش چربی شکم<br>و تقویت عملکرد مغز</p>
+  </div>
+
+  <!-- Features -->
+  <div class="features-grid">
+    <div class="feature-pill"><div class="icon">⏱</div><div class="label">روزه‌داری</div></div>
+    <div class="feature-pill"><div class="icon">🍽</div><div class="label">برنامه غذایی</div></div>
+    <div class="feature-pill"><div class="icon">💊</div><div class="label">مکمل‌ها</div></div>
+    <div class="feature-pill"><div class="icon">🚶</div><div class="label">پیاده‌روی</div></div>
+    <div class="feature-pill"><div class="icon">💧</div><div class="label">ردیاب آب</div></div>
+    <div class="feature-pill"><div class="icon">⚖️</div><div class="label">ردیاب وزن</div></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="num">۵+</div>
+      <div class="lbl">ردیاب</div>
+    </div>
+    <div class="divider"></div>
+    <div class="stat">
+      <div class="num">۱۰۰٪</div>
+      <div class="lbl">آفلاین</div>
+    </div>
+    <div class="divider"></div>
+    <div class="stat">
+      <div class="num">۰</div>
+      <div class="lbl">تبلیغات</div>
+    </div>
+    <div class="divider"></div>
+    <div class="stat">
+      <div class="num">🔒</div>
+      <div class="lbl">حریم خصوصی</div>
+    </div>
+  </div>
+
+  <!-- Already installed -->
+  <div class="installed-banner" id="installedBanner">
+    ✅ اپلیکیشن نصب است! روی دکمه زیر بزنید
+  </div>
+
+  <!-- Quick open button -->
+  <a href="index.html" class="cta-button">
+    باز کردن اپلیکیشن
+  </a>
+
+  <!-- Platform Tabs -->
+  <div class="platform-tabs">
+    <div class="platform-tab" data-platform="auto">🔍 تشخیص خودکار</div>
+    <div class="platform-tab" data-platform="android">🤖 اندروید</div>
+    <div class="platform-tab" data-platform="ios"> iOS</div>
+  </div>
+
+  <!-- Android Instructions -->
+  <div class="install-card section-hidden" id="androidSection">
+    <div class="install-title">🤖 نصب روی اندروید</div>
+    <div class="install-subtitle">با مرورگر Chrome یا Edge باز کنید</div>
+
+    <ul class="steps">
+      <li class="step">
+        <div class="step-number">۱</div>
+        <div class="step-content">
+          <div class="step-text">
+            این صفحه را در مرورگر <strong>Chrome</strong> یا <strong>Edge</strong> روی گوشی باز کنید.
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-number">۲</div>
+        <div class="step-content">
+          <div class="step-text">
+            روی دکمه منو در گوشه بالا بزنید
+            <div class="step-icon">⋮ سه نقطه</div>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-number">۳</div>
+        <div class="step-content">
+          <div class="step-text">
+            گزینه <strong>«افزودن به صفحه اصلی»</strong> یا <strong>«Install app»</strong> را انتخاب کنید
+          </div>
+          <div class="visual-demo">
+            <div class="demo-icon">📲</div>
+            <span>Add to Home screen</span>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-number">۴</div>
+        <div class="step-content">
+          <div class="step-text">
+            روی دکمه <strong>«افزودن»</strong> یا <strong>«Install»</strong> بزنید
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-number">۵</div>
+        <div class="step-content">
+          <div class="step-text">
+            تمام! آیکون اپلیکیشن در صفحه اصلی گوشی شما ظاهر می‌شود 🎉
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="note">
+      <strong>💡 نکته:</strong> ممکن است یک پاپ‌آپ خودکار «Install app» در پایین صفحه ظاهر شود. فقط روی «نصب» بزنید.
+    </div>
+  </div>
+
+  <!-- iOS Instructions -->
+  <div class="install-card section-hidden" id="iosSection">
+    <div class="install-title"> نصب روی آیفون / آیپد</div>
+    <div class="install-subtitle">با مرورگر Safari باز کنید (مهم!)</div>
+
+    <ul class="steps">
+      <li class="step">
+        <div class="step-number">۱</div>
+        <div class="step-content">
+          <div class="step-text">
+            ⚠️ <strong>حتماً با Safari باز کنید</strong> (نه Chrome) - این روش روی مرورگرهای دیگر کار نمی‌کند.
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-number">۲</div>
+        <div class="step-content">
+          <div class="step-text">
+            روی دکمه <strong>اشتراک‌گذاری</strong> در پایین صفحه بزنید
+          </div>
+          <div class="visual-demo">
+            <div class="demo-icon">⬆️</div>
+            <span>Share button (مربع با فلش بالا)</span>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-number">۳</div>
+        <div class="step-content">
+          <div class="step-text">
+            پایین بروید و گزینه <strong>«Add to Home Screen»</strong> را پیدا کنید
+          </div>
+          <div class="visual-demo">
+            <div class="demo-icon">➕</div>
+            <span>Add to Home Screen</span>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-number">۴</div>
+        <div class="step-content">
+          <div class="step-text">
+            در گوشه بالا روی <strong>«Add»</strong> بزنید
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-number">۵</div>
+        <div class="step-content">
+          <div class="step-text">
+            تمام! آیکون اپلیکیشن در صفحه اصلی آیفون شما ظاهر می‌شود 🎉
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="note warning">
+      <strong>⚠️ مهم:</strong> روی آیفون فقط با مرورگر Safari قابل نصب است. اگر از Chrome یا Firefox استفاده می‌کنید، اول لینک را در Safari باز کنید.
+    </div>
+  </div>
+
+  <!-- Desktop / QR Code -->
+  <div class="qr-card section-hidden" id="desktopSection">
+    <div class="install-title" style="justify-content:center;">💻 از کامپیوتر آمده‌اید؟</div>
+    <div class="install-subtitle">با QR Code روی گوشی نصب کنید</div>
+
+    <div class="qr-wrap">
+      <canvas id="qrcode"></canvas>
+    </div>
+
+    <div class="qr-text">
+      <strong>۱.</strong> دوربین گوشی را روشن کنید<br>
+      <strong>۲.</strong> به QR Code بالا نگاه کنید<br>
+      <strong>۳.</strong> روی لینک ظاهر شده بزنید<br>
+      <strong>۴.</strong> طبق راهنما اپلیکیشن را نصب کنید
+    </div>
+
+    <div class="note">
+      <strong>💡 یا:</strong> آدرس این صفحه را در گوشی خودتان باز کنید.
+    </div>
+  </div>
+
+  <!-- Why PWA -->
+  <div class="install-card">
+    <div class="install-title">🎯 چرا این روش بهترین است؟</div>
+
+    <div class="visual-demo">
+      <div class="demo-icon">🚀</div>
+      <span><strong>سریع و سبک:</strong> کمتر از ۱ مگابایت حجم</span>
+    </div>
+    <div class="visual-demo">
+      <div class="demo-icon">📡</div>
+      <span><strong>آفلاین کار می‌کند:</strong> بدون نیاز به اینترنت</span>
+    </div>
+    <div class="visual-demo">
+      <div class="demo-icon">🔒</div>
+      <span><strong>۱۰۰٪ خصوصی:</strong> داده‌ها فقط روی گوشی شما</span>
+    </div>
+    <div class="visual-demo">
+      <div class="demo-icon">🚫</div>
+      <span><strong>بدون تبلیغ و رایگان:</strong> همیشه</span>
+    </div>
+    <div class="visual-demo">
+      <div class="demo-icon">🔄</div>
+      <span><strong>به‌روزرسانی خودکار</strong></span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    نسخه ۲.۰ • برنامه شخصی سلامتی<br>
+    ⚠️ این برنامه جایگزین مشاوره پزشک نیست
+  </div>
+
+</div>
+
+<!-- QR Code Library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+<script>
+// Platform detection
+function detectPlatform() {
+  const ua = navigator.userAgent.toLowerCase();
+  if (/iphone|ipad|ipod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+    return 'ios';
+  }
+  if (/android/.test(ua)) return 'android';
+  return 'desktop';
+}
+
+function showSection(platform) {
+  document.querySelectorAll('.install-card, .qr-card').forEach(el => {
+    if (el.id === 'androidSection' || el.id === 'iosSection' || el.id === 'desktopSection') {
+      el.classList.add('section-hidden');
+    }
+  });
+
+  if (platform === 'android') {
+    document.getElementById('androidSection').classList.remove('section-hidden');
+  } else if (platform === 'ios') {
+    document.getElementById('iosSection').classList.remove('section-hidden');
+  } else if (platform === 'desktop') {
+    document.getElementById('desktopSection').classList.remove('section-hidden');
+  } else if (platform === 'auto') {
+    const detected = detectPlatform();
+    showSection(detected);
+    return detected;
+  }
+  return platform;
+}
+
+// Tab clicking
+document.querySelectorAll('.platform-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    showSection(tab.dataset.platform);
+  });
+});
+
+// Initialize - auto detect
+const detectedPlatform = detectPlatform();
+const autoTab = document.querySelector('.platform-tab[data-platform="auto"]');
+autoTab.classList.add('active');
+showSection(detectedPlatform);
+
+// Generate QR Code
+const currentUrl = window.location.href.replace('install.html', 'index.html').replace(/\/install\.html$/, '/index.html');
+const qrUrl = currentUrl.includes('://') ? currentUrl : window.location.origin + '/index.html';
+
+if (typeof QRCode !== 'undefined') {
+  QRCode.toCanvas(document.getElementById('qrcode'), qrUrl, {
+    width: 180,
+    margin: 1,
+    color: { dark: '#0f766e', light: '#ffffff' }
+  }, err => { if (err) console.error(err); });
+}
+
+// Check if already installed (running as PWA)
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+  document.getElementById('installedBanner').classList.add('show');
+}
+
+// Listen for install
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window.deferredPrompt = e;
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installedBanner').classList.add('show');
+});
+</script>
+
+</body>
+</html>
